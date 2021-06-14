@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "351548598968",
+    "project_id": "investment-portfolio-19d5c",
+    "storage_bucket": "investment-portfolio-19d5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351548598968:android:38b4e7601d69c7ab79224d",
+        "android_client_info": {
+          "package_name": "com.raymond.investment_portfolio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351548598968-log3icjc0slibo8ljirkhnjuf6q9v8uk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.raymond.investment_portfolio",
+            "certificate_hash": "ecbe40bb8a928484320874c0b958fcc0065c3b09"
+          }
+        },
+        {
+          "client_id": "351548598968-hqjr37bq5d48rgn31k7avbe1b6ecu35v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjigZdmj2rQVgK7Mh7MV37Vh7OWj37Yko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351548598968-hqjr37bq5d48rgn31k7avbe1b6ecu35v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
