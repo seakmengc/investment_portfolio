@@ -1,11 +1,11 @@
 class User {
-  String email;
-  String name;
-  String? password;
+  late String email = '';
+  late String name;
+  String? profileUrl;
 
-  User({required this.email, this.password, this.name = ''}) {
-    if (this.name == '') {
-      this.name = this.email.split("@").first;
-    }
+  User({required String? email, name = '', this.profileUrl}) {
+    this.email = email == null ? 'dummy@gmail.com' : email;
+
+    this.name = name == '' ? this.email.split("@").first : name;
   }
 }

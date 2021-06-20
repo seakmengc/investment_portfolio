@@ -1,13 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:investment_portfolio/components/divider_with_text.dart';
 import 'package:investment_portfolio/components/icon_rounded_button.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/user.dart';
-import 'package:investment_portfolio/services/auth.dart';
+import 'package:investment_portfolio/models/auth.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
+  @override
+  _SignInScreenState createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final emailController = new TextEditingController();
+  final passwordController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +28,7 @@ class SignInScreen extends StatelessWidget {
             children: [
               SizedBox(height: 75),
               Image.asset(
-                'assets/img/logo.png',
+                'assets/img/logo_1.png',
                 width: 200,
                 height: 200,
               ),
@@ -28,8 +37,9 @@ class SignInScreen extends StatelessWidget {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email',
-                  hintText: 'Enter your email',
+                  hintText: 'khmer@gmail.com',
                 ),
+                controller: emailController,
               ),
               SPACE_BETWEEN_ELEMENT,
               TextField(
@@ -39,14 +49,30 @@ class SignInScreen extends StatelessWidget {
                   labelText: 'Password',
                   hintText: '********',
                 ),
+                controller: passwordController,
               ),
+              SPACE_BETWEEN_ELEMENT,
               SPACE_BETWEEN_ELEMENT,
               RoundedButton(
                 text: 'Sign In',
-                onPressed: () => {},
+                minWidth: double.infinity,
+                height: 50,
+                onPressed: () async {
+                  final res = await Auth.signInWithEmailPassword(
+                    context: context,
+                    email: emailController.text,
+                    password: passwordController.text,
+                  );
+
+                  print(res);
+                  if (res != null) {
+                    print(context.read<Auth>().user);
+                  }
+                },
               ),
               SPACE_BETWEEN_ELEMENT,
-              DividerWithText(text: Text('OR')),
+              SPACE_BETWEEN_ELEMENT,
+              DividerWithText(text: Text('Sign in with')),
               SPACE_BETWEEN_ELEMENT,
               SignInWithGoogleButton(),
             ],
@@ -58,17 +84,13 @@ class SignInScreen extends StatelessWidget {
 }
 
 class SignInWithGoogleButton extends StatelessWidget {
-  const SignInWithGoogleButton({
-    Key? key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return IconRoundedButton(
       child: Row(
         children: [
           SizedBox(
-            width: 20,
+            width: 30,
           ),
           CachedNetworkImage(
             imageUrl:
@@ -76,9 +98,14 @@ class SignInWithGoogleButton extends StatelessWidget {
             width: 25,
           ),
           SizedBox(
-            width: 20,
+            width: 30,
           ),
-          Text('Sign In with Google'),
+          Expanded(
+            child: Text(
+              'Google',
+              textAlign: TextAlign.left,
+            ),
+          ),
         ],
       ),
       buttonColor: Colors.white,
@@ -88,7 +115,7 @@ class SignInWithGoogleButton extends StatelessWidget {
 
         print(res);
         if (res != null) {
-          print(User(email: res.email!, name: res.displayName!));
+          print(context.read<Auth>().user);
         }
       },
     );

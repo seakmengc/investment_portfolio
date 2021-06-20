@@ -25,20 +25,6 @@ class _WalletScreenState extends State<WalletScreen> {
     ),
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          MyBalance(
-            addCallback: addAssetCallback,
-          ),
-          MyPortfolios(assets: _assets),
-        ],
-      ),
-    );
-  }
-
   addAssetCallback(Asset addAsset) {
     setState(() {
       final curr = this
@@ -54,6 +40,20 @@ class _WalletScreenState extends State<WalletScreen> {
         curr.amount = totalAmt;
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Stack(
+        children: [
+          MyBalance(
+            addCallback: addAssetCallback,
+          ),
+          MyPortfolios(assets: _assets),
+        ],
+      ),
+    );
   }
 }
 
@@ -159,14 +159,15 @@ class MyBalance extends StatelessWidget {
           minWidth: 175,
           height: 50,
           buttonColor: Colors.white,
+          textColor: Colors.grey[700]!,
           onPressed: () => buyButtonOnPressed(context),
         ),
         RoundedButton(
           text: 'Sell',
           minWidth: 175,
           height: 50,
-          buttonColor: Colors.grey[700]!,
-          textColor: Colors.white,
+          buttonColor: Colors.red[600]!,
+          onPressed: () => buyButtonOnPressed(context),
         ),
       ],
     );
