@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/screens/assets/detail.dart';
 
@@ -21,15 +22,17 @@ class AssetListTile extends StatelessWidget {
           ),
         );
       },
-      leading: Image.network(
-        this.asset.token.logoUrl!,
-        width: 30,
-      ),
+      leading: this.asset.token.hasSvgLogo
+          ? SvgPicture.network(this.asset.token.logoUrl)
+          : Image.network(
+              this.asset.token.logoUrl,
+              width: 30,
+            ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(this.asset.token.symbol),
+          Text(this.asset.token.id),
           // Text('\$ 60,970.64'),
           Text(this.asset.amount.toString()),
         ],
@@ -40,7 +43,7 @@ class AssetListTile extends StatelessWidget {
         children: [
           Text(
             // '\$ 1,500.89',
-            "\$ " + this.asset.price.toStringAsFixed(2),
+            "\$ " + this.asset.totalPrice.toStringAsFixed(2),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,

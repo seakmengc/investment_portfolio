@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_portfolio/models/token.dart';
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:investment_portfolio/models/user.dart' as Model;
@@ -12,9 +13,13 @@ class Auth extends ChangeNotifier {
 
   bool get isLoggedIn => this._loggedIn;
 
+  Model.User? get getAuth => this.user;
+
   void loggedIn(Model.User user) {
     this._loggedIn = true;
     this.user = user;
+    print('loggedIn');
+    print(this._loggedIn);
 
     notifyListeners();
   }
@@ -26,19 +31,27 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
-  static Future<FirebaseApp> initializeFirebase() async {
+  static Future<FirebaseApp> initializeFirebase(BuildContext context) async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
-    // TODO: Add auto login logic
+    print("Done initialize firebase");
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      print("in");
+      print(user);
+      print(Model.User.fromFirebaseAuthUser(user));
+      context.read<Auth>().loggedIn(Model.User.fromFirebaseAuthUser(user));
+    }
+    // Token.saveToFirestore();
+    print("Done try login");
 
     return firebaseApp;
   }
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
-    await Auth.initializeFirebase();
-
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+    UserCredential? userCredential;
 
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -55,26 +68,18 @@ class Auth extends ChangeNotifier {
       );
 
       try {
-        final UserCredential userCredential =
-            await auth.signInWithCredential(credential);
-
-        user = userCredential.user;
+        userCredential = await auth.signInWithCredential(credential);
       } catch (ex) {
         print(ex);
         // handle the error here
       }
     }
 
-    if (user != null && user.email != null) {
-      context.read<Auth>().loggedIn(
-            new Model.User(
-              email: user.email!,
-              name: user.displayName!,
-            ),
-          );
+    if (userCredential != null) {
+      Auth.afterAuthenticatedFromFirebase(context, userCredential);
     }
 
-    return user;
+    return userCredential?.user;
   }
 
   static Future<User?> signInWithEmailPassword({
@@ -82,16 +87,12 @@ class Auth extends ChangeNotifier {
     required email,
     required password,
   }) async {
-    await Auth.initializeFirebase();
-
     FirebaseAuth auth = FirebaseAuth.instance;
-    User? user;
+    UserCredential? userCredential;
 
     try {
-      final UserCredential userCredential = await auth
-          .signInWithEmailAndPassword(email: email, password: password);
-      print(userCredential);
-      user = userCredential.user;
+      userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
     } on FirebaseAuthException catch (ex) {
       if (ex.code != 'user-not-found') {
         throw ex;
@@ -100,21 +101,27 @@ class Auth extends ChangeNotifier {
       print(ex.runtimeType);
 
       // create not existing user
-      final UserCredential userCredential = await auth
-          .createUserWithEmailAndPassword(email: email, password: password);
-
-      user = userCredential.user;
+      userCredential = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
     }
 
-    if (user != null && user.email != null) {
-      context.read<Auth>().loggedIn(
-            new Model.User(
-              email: user.email,
-              profileUrl: user.photoURL,
-            ),
-          );
+    Auth.afterAuthenticatedFromFirebase(context, userCredential);
+
+    return userCredential.user;
+  }
+
+  static void afterAuthenticatedFromFirebase(
+      BuildContext context, UserCredential userCredential) async {
+    final User user = userCredential.user!;
+
+    Model.User? auth = await Model.User.findById(user.uid);
+
+    if (auth == null) {
+      auth = Model.User.fromFirebaseAuthUser(user);
+
+      auth.persist();
     }
 
-    return user;
+    context.read<Auth>().loggedIn(auth);
   }
 }

@@ -5,7 +5,7 @@ class RoundedButton extends StatelessWidget {
   final double minWidth;
   final double height;
   final Color textColor;
-  final Color buttonColor;
+  final Color? buttonColor;
 
   final void Function()? onPressed;
 
@@ -14,7 +14,7 @@ class RoundedButton extends StatelessWidget {
     this.minWidth = 100,
     this.height = 40,
     this.textColor = Colors.white,
-    this.buttonColor = Colors.blue,
+    this.buttonColor,
     this.onPressed,
   });
 
@@ -22,7 +22,7 @@ class RoundedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: this.onPressed,
-      color: this.buttonColor,
+      color: this.buttonColor ?? Theme.of(context).primaryColor,
       textColor: this.textColor,
       minWidth: this.minWidth,
       height: this.height,

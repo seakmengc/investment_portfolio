@@ -35,13 +35,13 @@ class AssetDetailScreen extends StatelessWidget {
         floating: true,
         pinned: true,
         flexibleSpace: FlexibleSpaceBar(
-          title: Text(this.asset.token.symbol),
+          title: Text(this.asset.token.id),
           background: Padding(
             padding: const EdgeInsets.all(35),
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(this.asset.token.logoUrl!),
+                  image: NetworkImage(this.asset.token.logoUrl),
                   fit: BoxFit.fitHeight,
                 ),
               ),

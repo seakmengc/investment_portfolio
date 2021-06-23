@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:investment_portfolio/components/asset_list_tile.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
-import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/asset.dart';
-import 'package:investment_portfolio/models/token.dart';
-import 'package:investment_portfolio/screens/buy.dart';
+import 'package:investment_portfolio/models/auth.dart';
+import 'package:investment_portfolio/screens/assets/buy.dart';
+import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
   @override
@@ -12,32 +13,53 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  List<Asset> _assets = [
-    Asset(
-      token: Token(id: 'ADA', symbol: 'ADA', logoUrl: ADA_URL),
-      price: 1.0,
-      amount: 3,
-    ),
-    Asset(
-      token: Token(id: 'ETH', symbol: 'ETH', logoUrl: ETH_URL),
-      price: 2000,
-      amount: 5,
-    ),
-  ];
+  List<Asset> _assets = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchAssets(context);
+  }
+
+  fetchAssets(BuildContext context) async {
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    final String userId = context.read<Auth>().user!.id;
+
+    final assets = await firebaseFirestore
+        .collection('users')
+        .doc(userId)
+        .collection('assets')
+        .get();
+
+    print(assets.docs.first.data());
+
+    assets.docs.forEach((element) {
+      this.addAssetCallback(Asset.fromJson(userId, element.data()));
+    });
+
+    this._assets.sort(
+          (a, b) => b.totalPrice.compareTo(a.totalPrice),
+        );
+
+    setState(() {});
+
+    print('1');
+  }
 
   addAssetCallback(Asset addAsset) {
     setState(() {
-      final curr = this
-          ._assets
-          .firstWhere((element) => element.token.id == addAsset.token.id);
+      try {
+        final curr = this
+            ._assets
+            .firstWhere((element) => element.token.id == addAsset.token.id);
 
-      if (curr == null) {
-        this._assets.add(addAsset);
-      } else {
         final totalAmt = curr.amount + addAsset.amount;
 
         curr.price = (curr.totalPrice + addAsset.totalPrice) / totalAmt;
         curr.amount = totalAmt;
+      } catch (ex) {
+        this._assets.add(addAsset);
       }
     });
   }
@@ -58,11 +80,11 @@ class _WalletScreenState extends State<WalletScreen> {
 }
 
 class MyPortfolios extends StatelessWidget {
+  final List<Asset> _assets;
+
   const MyPortfolios({
     required List<Asset> assets,
   }) : _assets = assets;
-
-  final List<Asset> _assets;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +136,7 @@ class MyPortfolios extends StatelessWidget {
 class MyBalance extends StatelessWidget {
   final Function(Asset) addCallback;
 
-  const MyBalance({Key? key, required this.addCallback}) : super(key: key);
+  const MyBalance({required this.addCallback});
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +16,13 @@ class SettingScreen extends StatelessWidget {
           children: [
             SPACE_BETWEEN_ELEMENT,
             CircleAvatar(
-              backgroundImage: NetworkImage(
-                (context.read<Auth>().user?.profileUrl != null
-                    ? context.read<Auth>().user?.profileUrl
-                    : "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg")!,
-              ),
+              backgroundImage: CachedNetworkImageProvider((context
+                          .read<Auth>()
+                          .user
+                          ?.profileUrl !=
+                      null
+                  ? context.read<Auth>().user?.profileUrl
+                  : "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg")!),
               radius: 50.0,
             ),
             SPACE_BETWEEN_ELEMENT,
@@ -33,23 +35,17 @@ class SettingScreen extends StatelessWidget {
               ),
             ),
             SPACE_BETWEEN_ELEMENT,
-            Row(
-              children: [
-                Expanded(
-                  child: CardButton(
-                    icon: Icons.gps_off,
-                    text: 'Log Out',
-                    onTap: () => context.read<Auth>().logOut(),
-                  ),
-                ),
-                Expanded(
-                  child: CardButton(
-                    icon: Icons.gps_off,
-                    text: 'Log Out',
-                    onTap: () => context.read<Auth>().logOut(),
-                  ),
-                ),
-              ],
+            SPACE_BETWEEN_ELEMENT,
+            SPACE_BETWEEN_ELEMENT,
+            CardButton(
+              icon: Icons.lock_outlined,
+              text: 'Change Password',
+              onTap: () => context.read<Auth>().logOut(),
+            ),
+            CardButton(
+              icon: Icons.gps_off,
+              text: 'Log Out',
+              onTap: () => context.read<Auth>().logOut(),
             ),
           ],
         ),
@@ -80,14 +76,13 @@ class CardButton extends StatelessWidget {
       child: ListTile(
         enableFeedback: true,
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 20,
-          horizontal: 10,
+          vertical: 10,
+          horizontal: 20,
         ),
         leading: Icon(this.icon),
         title: Text(this.text),
         onTap: this.onTap,
         visualDensity: VisualDensity.compact,
-        horizontalTitleGap: 0.2,
       ),
     );
   }
