@@ -1,15 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:investment_portfolio/components/asset_list_tile.dart';
 import 'package:investment_portfolio/components/number_form_field.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
+import 'package:investment_portfolio/components/token_list_tile.dart';
 import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:investment_portfolio/models/token.dart';
-
 import 'package:provider/provider.dart';
 
 class BuyScreeen extends StatefulWidget {
@@ -18,20 +15,7 @@ class BuyScreeen extends StatefulWidget {
 }
 
 class _BuyScreeenState extends State<BuyScreeen> {
-  List<Token> _tokens = [
-    // Token(
-    //   id: 'BTC',
-    //   logoUrl: BTC_URL,
-    // ),
-    // Token(
-    //   id: 'ADA',
-    //   logoUrl: ADA_URL,
-    // ),
-    // Token(
-    //   id: 'ETH',
-    //   logoUrl: ETH_URL,
-    // ),
-  ];
+  List<Token> _tokens = [];
 
   final perPriceController = TextEditingController();
   final amountController = TextEditingController();
@@ -41,14 +25,14 @@ class _BuyScreeenState extends State<BuyScreeen> {
     print(perPriceController.text);
     print(amountController.text);
 
+    Token selectedToken = this._tokens.firstWhere(
+        (element) => element.id == tokenIdController.text.toUpperCase());
     Asset addedAsset = Asset(
       userId: context.read<Auth>().getAuth!.id,
-      token: new Token(id: tokenIdController.text.toUpperCase()),
+      token: selectedToken,
       price: double.parse(perPriceController.text),
       amount: double.parse(amountController.text),
     );
-
-    await addedAsset.persist();
 
     Navigator.pop(context, addedAsset);
   }
@@ -168,29 +152,5 @@ class _BuyScreeenState extends State<BuyScreeen> {
         expandedHeight: 150,
       ),
     ];
-  }
-}
-
-class TokenListTile extends StatelessWidget {
-  final Token token;
-
-  const TokenListTile({required this.token});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: token.hasSvgLogo
-          ? SvgPicture.network(
-              token.logoUrl,
-              width: 30,
-              fit: BoxFit.cover,
-            )
-          : CachedNetworkImage(
-              imageUrl: token.logoUrl,
-              width: 30,
-              fit: BoxFit.cover,
-            ),
-      title: Text(token.id),
-    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/screens/assets/detail.dart';
+import 'package:intl/intl.dart';
 
 class AssetListTile extends StatelessWidget {
   final Asset asset;
@@ -23,7 +24,10 @@ class AssetListTile extends StatelessWidget {
         );
       },
       leading: this.asset.token.hasSvgLogo
-          ? SvgPicture.network(this.asset.token.logoUrl)
+          ? SvgPicture.network(
+              this.asset.token.logoUrl,
+              width: 30,
+            )
           : Image.network(
               this.asset.token.logoUrl,
               width: 30,
@@ -43,7 +47,9 @@ class AssetListTile extends StatelessWidget {
         children: [
           Text(
             // '\$ 1,500.89',
-            "\$ " + this.asset.totalPrice.toStringAsFixed(2),
+            "\$ " +
+                new NumberFormat("#,##0.00", "en_US")
+                    .format(this.asset.totalPrice),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,

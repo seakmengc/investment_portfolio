@@ -9,6 +9,8 @@ class Token {
   late String logoUrl;
 
   Token({required this.id, String? logoUrl}) {
+    print("constructor");
+    print(logoUrl);
     this.logoUrl = logoUrl ??
         'https://upload.wikimedia.org/wikipedia/commons/d/d2/Bitcoin_Digital_Currency_Logo.png';
   }
@@ -36,6 +38,8 @@ class Token {
   }
 
   factory Token.fromJson(Map<String, dynamic> json) {
+    print("Token fromjson");
+    print(json);
     return new Token(
       id: json['id'],
       logoUrl: json['logoUrl'],
@@ -47,10 +51,10 @@ class Token {
 
     final tokensCollection = await firestore.collection('tokens').get();
 
-    if (tokensCollection.docs.length < 10000) {
+    if (tokensCollection.docs.length < 100) {
       int page = 1;
 
-      while (true) {
+      while (page <= 1) {
         final res = await Dio().get(INDEX_URL + page.toString());
 
         final tokens = List.from(res.data).map((e) => Token.fromNomic(e));
