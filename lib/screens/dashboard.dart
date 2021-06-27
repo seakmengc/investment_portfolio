@@ -9,7 +9,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int _currIndex = 0;
+  int _currIndex = 1;
 
   appBarOnTap(int index) {
     setState(() {

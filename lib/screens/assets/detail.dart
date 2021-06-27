@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:investment_portfolio/components/asset/transac_history.dart';
+import 'package:investment_portfolio/components/token/overview.dart';
 import 'package:investment_portfolio/models/asset.dart';
 
 class AssetDetailScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class AssetDetailScreen extends StatelessWidget {
           headerSliverBuilder: buildSliverAppBar,
           body: TabBarView(
             children: [
-              OverviewTab(),
+              TokenOverview(asset.token.id),
               TransacHistory(asset),
             ],
           ),
@@ -71,15 +72,6 @@ class AssetDetailScreen extends StatelessWidget {
         pinned: true,
       ),
     ];
-  }
-}
-
-class OverviewTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text('Overview'),
-    );
   }
 }
 
