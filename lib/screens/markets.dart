@@ -62,26 +62,24 @@ class _MarketScreenState extends State<MarketScreen> {
         centerTitle: true,
         title: Text('Markets'),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: FutureBuilder(
-          future: fetchPage(1),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return PagedListView<int, TokenViewListTile>(
+      body: FutureBuilder(
+        future: fetchPage(1),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return SizedBox.expand(
+              child: PagedListView<int, TokenViewListTile>(
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<TokenViewListTile>(
                   itemBuilder: (context, item, index) => item,
                 ),
-              );
-            }
-
-            return Center(
-              child: Text('Loading...'),
+              ),
             );
-          },
-        ),
+          }
+
+          return Center(
+            child: Text('Loading...'),
+          );
+        },
       ),
     );
   }
@@ -159,7 +157,7 @@ class TokenViewListTile extends StatelessWidget {
         ),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               new NumberFormat('\$ #,##0.00')

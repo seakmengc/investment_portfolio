@@ -21,8 +21,8 @@ class AssetDetailScreen extends StatelessWidget {
           headerSliverBuilder: buildSliverAppBar,
           body: TabBarView(
             children: [
-              TokenOverview(asset.token.id),
               TransacHistory(asset),
+              TokenOverview(asset.token.id),
             ],
           ),
         ),
@@ -64,8 +64,8 @@ class AssetDetailScreen extends StatelessWidget {
             labelColor: Colors.black87,
             unselectedLabelColor: Colors.grey,
             tabs: [
-              Tab(icon: Icon(Icons.dashboard)),
               Tab(icon: Icon(Icons.sync)),
+              Tab(icon: Icon(Icons.dashboard)),
             ],
           ),
         ),
