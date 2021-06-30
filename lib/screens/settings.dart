@@ -5,9 +5,17 @@ import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:provider/provider.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
+  @override
+  _SettingScreenState createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(top: 30),
@@ -36,8 +44,6 @@ class SettingScreen extends StatelessWidget {
               ),
             ),
             SPACE_BETWEEN_ELEMENT,
-            SPACE_BETWEEN_ELEMENT,
-            SPACE_BETWEEN_ELEMENT,
             CardButton(
               icon: Icons.lock_outlined,
               text: 'Change Password',
@@ -58,6 +64,9 @@ class SettingScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class CardButton extends StatelessWidget {

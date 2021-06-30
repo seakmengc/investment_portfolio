@@ -1,11 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:investment_portfolio/screens/dashboard.dart';
 import 'package:investment_portfolio/screens/sign_in.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider<Auth>(create: (_) => Auth()),
@@ -34,7 +38,7 @@ class _MyAppState extends State<MyApp> {
             return AuthScreen();
           }
 
-          return Container();
+          return Loading();
         },
       ),
     );

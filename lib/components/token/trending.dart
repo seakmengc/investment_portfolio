@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:investment_portfolio/components/animated_text.dart';
 import 'package:investment_portfolio/constants.dart';
 
 class Trending extends StatelessWidget {
@@ -17,8 +18,8 @@ class Trending extends StatelessWidget {
           color: !percentages.isNegative ? Colors.green : Colors.red,
         ),
         WIDTH_BETWEEN_ELEMENT,
-        Text(
-          percentages.toStringAsFixed(2) + '%',
+        AnimatedText(
+          text: percentages.toStringAsFixed(2) + '%',
           style: TextStyle(
             color: !percentages.isNegative ? Colors.green : Colors.red,
           ),

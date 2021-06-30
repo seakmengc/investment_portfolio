@@ -102,7 +102,7 @@ class SignInWithGoogleButton extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              'Google',
+              'Continue with Google',
               textAlign: TextAlign.left,
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/token/overview.dart';
 import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/constants.dart';
@@ -15,7 +16,8 @@ class MarketScreen extends StatefulWidget {
   _MarketScreenState createState() => _MarketScreenState();
 }
 
-class _MarketScreenState extends State<MarketScreen> {
+class _MarketScreenState extends State<MarketScreen>
+    with AutomaticKeepAliveClientMixin {
   List<Map<String, dynamic>> tokens = [];
 
   final PagingController<int, TokenViewListTile> _pagingController =
@@ -53,11 +55,14 @@ class _MarketScreenState extends State<MarketScreen> {
   @override
   void dispose() {
     _pagingController.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -67,7 +72,7 @@ class _MarketScreenState extends State<MarketScreen> {
         future: fetchPage(1),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return SizedBox.expand(
+            return SizedBox(
               child: PagedListView<int, TokenViewListTile>(
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<TokenViewListTile>(
@@ -77,13 +82,14 @@ class _MarketScreenState extends State<MarketScreen> {
             );
           }
 
-          return Center(
-            child: Text('Loading...'),
-          );
+          return Loading();
         },
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class TokenViewListTile extends StatelessWidget {
@@ -111,45 +117,41 @@ class TokenViewListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 75,
-      child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Scaffold(
-                body: TokenOverview(token['id']),
-              ),
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+              body: TokenOverview(token['id']),
             ),
-          );
-        },
-        leading: getLogoWidget(),
-        title: Text(token['id']),
-        subtitle: Text(
-          'Vol. ' +
-              Helper.formatNumberToHumanString(
-                double.parse(token['1d']['volume'].toString()),
-              ),
-        ),
-        trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              new NumberFormat('\$ #,##0.00')
-                  .format(double.parse(token['price'])),
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+        );
+      },
+      leading: getLogoWidget(),
+      title: Text(token['id']),
+      subtitle: Text(
+        'Vol. ' +
+            Helper.formatNumberToHumanString(
+              double.parse(token['1d']['volume'].toString()),
             ),
-            Trending(
-              double.parse(token['1d']['price_change_pct']) * 100.0,
+      ),
+      trailing: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            new NumberFormat('\$ #,##0.00')
+                .format(double.parse(token['price'])),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
+          ),
+          Trending(
+            double.parse(token['1d']['price_change_pct']) * 100.0,
+          ),
+        ],
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investment_portfolio/components/animated_text.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/models/asset.dart';
@@ -47,8 +48,9 @@ class MyBalance extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15),
-          Text(
-            '\$ ' + new NumberFormat("#,##0.00", "en_US").format(totalBalance),
+          AnimatedText(
+            text: '\$ ' +
+                new NumberFormat("#,##0.00", "en_US").format(totalBalance),
             style: TextStyle(
               fontSize: 45,
               color: Colors.white,
@@ -73,8 +75,8 @@ class MyBalance extends StatelessWidget {
           height: 50,
           buttonColor: Colors.white,
           textColor: Colors.grey[700]!,
-          onPressed: () {
-            buyButtonOnPressed(context);
+          onPressed: () async {
+            await buyButtonOnPressed(context);
             calTotalBalance();
           },
         ),
@@ -83,8 +85,8 @@ class MyBalance extends StatelessWidget {
           minWidth: 175,
           height: 50,
           buttonColor: Colors.red[600]!,
-          onPressed: () {
-            sellButtonOnPressed(context);
+          onPressed: () async {
+            await sellButtonOnPressed(context);
             calTotalBalance();
           },
         ),
@@ -103,8 +105,8 @@ class MyBalance extends StatelessWidget {
     final double changes = (bought - current) / 100.0;
     return Row(
       children: [
-        Text(
-          "\$ " +
+        AnimatedText(
+          text: "\$ " +
               new NumberFormat("#,##0.00", "en_US").format(bought - current),
           style: TextStyle(
             fontSize: 18,

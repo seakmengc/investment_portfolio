@@ -8,27 +8,32 @@ class DashboardScreen extends StatefulWidget {
   _DashboardScreenState createState() => _DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  int _currIndex = 0;
+class _DashboardScreenState extends State<DashboardScreen>
+    with TickerProviderStateMixin {
+  int _currIndex = 2;
+  late TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController =
+        TabController(initialIndex: _currIndex, length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+
+    super.dispose();
+  }
 
   appBarOnTap(int index) {
     setState(() {
       this._currIndex = index % 3;
-      print(index);
-      print(index % 3);
+      tabController.index = this._currIndex;
+      // print(index);
+      // print(index % 3);
     });
-  }
-
-  buildPage(int index) {
-    if (index == 0) {
-      return WalletScreen();
-    }
-
-    if (index == 1) {
-      return MarketScreen();
-    }
-
-    return SettingScreen();
   }
 
   @override
@@ -38,7 +43,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         index: this._currIndex,
         onTap: appBarOnTap,
       ),
-      body: buildPage(this._currIndex),
+      body: TabBarView(
+        controller: tabController,
+        physics: NeverScrollableScrollPhysics(),
+        children: [
+          WalletScreen(),
+          MarketScreen(),
+          SettingScreen(),
+        ],
+      ),
     );
   }
 

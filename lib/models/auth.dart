@@ -34,9 +34,10 @@ class Auth extends ChangeNotifier {
     }
   }
 
-  void logOut() {
+  logOut() async {
     this._loggedIn = false;
     this.user = null;
+    await FirebaseAuth.instance.signOut();
 
     notifyListeners();
   }

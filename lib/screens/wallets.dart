@@ -14,7 +14,8 @@ class WalletScreen extends StatefulWidget {
   _WalletScreenState createState() => _WalletScreenState();
 }
 
-class _WalletScreenState extends State<WalletScreen> {
+class _WalletScreenState extends State<WalletScreen>
+    with AutomaticKeepAliveClientMixin {
   List<Asset> _assets = [];
 
   @override
@@ -130,7 +131,12 @@ class _WalletScreenState extends State<WalletScreen> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Container(
       child: Stack(
         children: [

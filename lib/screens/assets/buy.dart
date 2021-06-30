@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/number_form_field.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/components/token_list_tile.dart';
@@ -45,34 +46,23 @@ class _BuyScreeenState extends State<BuyScreeen> {
   }
 
   getTokens() async {
-    final tokens = await Token.getFromFirestore();
+    return Token.getFromFirestore().then((tokens) {
+      if (tokens.isEmpty) {
+        return;
+      }
 
-    if (tokens.isEmpty) {
-      return;
-    }
-
-    print(tokens.first);
-    setState(() {
+      print(tokens.first);
       this._tokens.addAll(tokens);
     });
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    getTokens();
-
-    // this._selectedToken = this._tokens[0];
-  }
-
-  @override
   void dispose() {
-    super.dispose();
-
     tokenIdController.dispose();
     perPriceController.dispose();
     amountController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -83,59 +73,72 @@ class _BuyScreeenState extends State<BuyScreeen> {
         body: SingleChildScrollView(
           padding:
               const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 10),
-          child: Column(
-            children: [
-              TypeAheadField(
-                hideSuggestionsOnKeyboardHide: false,
-                textFieldConfiguration: TextFieldConfiguration(
-                  autofocus: true,
-                  decoration: InputDecoration(border: OutlineInputBorder()),
-                  controller: tokenIdController,
-                ),
-                suggestionsCallback: (pattern) {
-                  return searchTokens(pattern);
-                },
-                itemBuilder: (context, suggestion) {
-                  if (suggestion == null) {
-                    return ListTile(
-                      leading: Icon(Icons.shopping_cart),
-                      title: Text('Error'),
-                    );
-                  }
+          child: FutureBuilder(
+            future: getTokens(),
+            builder: (ctx, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Column(
+                  children: [
+                    buildTokenSelection(),
+                    SPACE_BETWEEN_ELEMENT,
+                    NumberFormField(
+                      label: 'Per Price',
+                      controller: perPriceController,
+                    ),
+                    SPACE_BETWEEN_ELEMENT,
+                    NumberFormField(
+                      label: 'Amount',
+                      controller: amountController,
+                    ),
+                    SPACE_BETWEEN_ELEMENT,
+                    SPACE_BETWEEN_ELEMENT,
+                    RoundedButton(
+                      text: 'Add',
+                      textColor: Colors.white,
+                      height: 50,
+                      minWidth: double.infinity,
+                      onPressed: () => addAsset(context),
+                    ),
+                  ],
+                );
+              }
 
-                  return TokenListTile(token: suggestion as Token);
-                },
-                onSuggestionSelected: (suggestion) {
-                  print("SELECTED");
-                  print(suggestion);
-                  final token = suggestion as Token;
-
-                  tokenIdController.value = TextEditingValue(text: token.id);
-                },
-              ),
-              SPACE_BETWEEN_ELEMENT,
-              NumberFormField(
-                label: 'Per Price',
-                controller: perPriceController,
-              ),
-              SPACE_BETWEEN_ELEMENT,
-              NumberFormField(
-                label: 'Amount',
-                controller: amountController,
-              ),
-              SPACE_BETWEEN_ELEMENT,
-              SPACE_BETWEEN_ELEMENT,
-              RoundedButton(
-                text: 'Add',
-                textColor: Colors.white,
-                height: 50,
-                minWidth: double.infinity,
-                onPressed: () => addAsset(context),
-              ),
-            ],
+              return Loading();
+            },
           ),
         ),
       ),
+    );
+  }
+
+  TypeAheadField<Object> buildTokenSelection() {
+    return TypeAheadField(
+      hideSuggestionsOnKeyboardHide: false,
+      textFieldConfiguration: TextFieldConfiguration(
+        autofocus: true,
+        decoration: InputDecoration(border: OutlineInputBorder()),
+        controller: tokenIdController,
+      ),
+      suggestionsCallback: (pattern) {
+        return searchTokens(pattern);
+      },
+      itemBuilder: (context, suggestion) {
+        if (suggestion == null) {
+          return ListTile(
+            leading: Icon(Icons.shopping_cart),
+            title: Text('Error'),
+          );
+        }
+
+        return TokenListTile(token: suggestion as Token);
+      },
+      onSuggestionSelected: (suggestion) {
+        print("SELECTED");
+        print(suggestion);
+        final token = suggestion as Token;
+
+        tokenIdController.value = TextEditingValue(text: token.id);
+      },
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:investment_portfolio/components/asset/transac_list_tile.dart';
+import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/models/transac.dart';
 
@@ -12,7 +13,8 @@ class TransacHistory extends StatefulWidget {
   _TransacHistoryState createState() => _TransacHistoryState();
 }
 
-class _TransacHistoryState extends State<TransacHistory> {
+class _TransacHistoryState extends State<TransacHistory>
+    with AutomaticKeepAliveClientMixin {
   final List<Transac> transacs = [];
 
   @override
@@ -31,7 +33,12 @@ class _TransacHistoryState extends State<TransacHistory> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return FutureBuilder(
       future: Transac.getByAsset(widget.asset),
       builder: (context, snapshot) {
@@ -42,9 +49,7 @@ class _TransacHistoryState extends State<TransacHistory> {
           );
         }
 
-        return Container(
-          child: Text("loading"),
-        );
+        return Loading();
       },
     );
   }
