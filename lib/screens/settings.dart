@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_portfolio/components/alerts/change_password.dart';
 import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:provider/provider.dart';
@@ -40,11 +41,16 @@ class SettingScreen extends StatelessWidget {
             CardButton(
               icon: Icons.lock_outlined,
               text: 'Change Password',
-              onTap: () => context.read<Auth>().logOut(),
+              onTap: () {
+                return showDialog(
+                  context: context,
+                  builder: (ctx) => new ChangePasswordDialog(),
+                );
+              },
             ),
             CardButton(
-              icon: Icons.gps_off,
-              text: 'Log Out',
+              icon: Icons.exit_to_app,
+              text: 'Sign Out',
               onTap: () => context.read<Auth>().logOut(),
             ),
           ],

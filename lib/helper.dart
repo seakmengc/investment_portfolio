@@ -25,4 +25,9 @@ class Helper {
     return 'https://api.nomics.com/v1/currencies/ticker?key=e8af4b9a7cf0cb0e13062e48af40fb8636ed3233&interval=1d&ids=' +
         tokenId;
   }
+
+  static String getTokensInfo(List<String> tokenIds) {
+    return 'https://api.nomics.com/v1/currencies/ticker?key=e8af4b9a7cf0cb0e13062e48af40fb8636ed3233&interval=1d&ids=' +
+        tokenIds.join(",");
+  }
 }

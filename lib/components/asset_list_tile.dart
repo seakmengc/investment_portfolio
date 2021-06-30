@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/screens/assets/detail.dart';
 import 'package:intl/intl.dart';
@@ -49,28 +50,13 @@ class AssetListTile extends StatelessWidget {
             // '\$ 1,500.89',
             "\$ " +
                 new NumberFormat("#,##0.00", "en_US")
-                    .format(this.asset.totalPrice),
+                    .format(this.asset.currTotalPrice),
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '4.28%',
-                style: TextStyle(
-                  color: Colors.greenAccent,
-                ),
-              ),
-              Icon(
-                Icons.north_east,
-                size: 15,
-                color: Colors.greenAccent,
-              ),
-            ],
-          ),
+          Trending(asset.changes),
         ],
       ),
     );

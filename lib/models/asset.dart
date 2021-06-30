@@ -9,6 +9,7 @@ class Asset extends ChangeNotifier {
   final Token token;
   double price;
   double amount;
+  late double currPrice;
 
   Asset({
     required this.userId,
@@ -18,11 +19,21 @@ class Asset extends ChangeNotifier {
   }) {
     this.id = this.token.id;
 
+    this.currPrice = this.price;
+
     // getTokenUrl();
   }
 
   double get totalPrice {
     return this.price * this.amount;
+  }
+
+  double get currTotalPrice {
+    return this.currPrice * this.amount;
+  }
+
+  double get changes {
+    return (this.currPrice - this.price) / 100.0;
   }
 
   void getTokenUrl() async {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:investment_portfolio/components/token/overview.dart';
+import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/constants.dart';
 
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -108,29 +109,6 @@ class TokenViewListTile extends StatelessWidget {
           );
   }
 
-  buildTrending(double percentages) {
-    bool isUp = !percentages.isNegative;
-    Color color = isUp ? Colors.green : Colors.red;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          isUp ? Icons.trending_up : Icons.trending_down,
-          color: color,
-        ),
-        WIDTH_BETWEEN_ELEMENT,
-        Text(
-          percentages.toStringAsFixed(2) + '%',
-          style: TextStyle(
-            color: color,
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -167,7 +145,7 @@ class TokenViewListTile extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            buildTrending(
+            Trending(
               double.parse(token['1d']['price_change_pct']) * 100.0,
             ),
           ],

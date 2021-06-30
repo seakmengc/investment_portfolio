@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
+import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/models/transac.dart';
 import 'package:investment_portfolio/screens/assets/buy.dart';
@@ -10,20 +11,17 @@ class MyBalance extends StatelessWidget {
   final Function(Asset) addCallback;
   final Function(Transac) sellCallback;
   final List<Asset> assets;
-  late final double totalBalance;
 
   MyBalance({
     required this.addCallback,
     required this.sellCallback,
     required this.assets,
-  }) {
-    this.totalBalance = calTotalBalance();
-  }
+  });
 
   calTotalBalance() {
     double sum = 0;
     this.assets.forEach((element) {
-      sum += element.totalPrice;
+      sum += element.currTotalPrice;
     });
 
     return sum;
@@ -31,6 +29,8 @@ class MyBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double totalBalance = calTotalBalance();
+
     return Container(
       padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
       width: double.infinity,
@@ -93,27 +93,26 @@ class MyBalance extends StatelessWidget {
   }
 
   Row buildDailyPL() {
+    double current = 0.0;
+    double bought = 0.0;
+    this.assets.forEach((element) {
+      current += element.currTotalPrice;
+      bought += element.totalPrice;
+    });
+
+    final double changes = (bought - current) / 100.0;
     return Row(
       children: [
         Text(
-          '+ \$ 252.26',
+          "\$ " +
+              new NumberFormat("#,##0.00", "en_US").format(bought - current),
           style: TextStyle(
             fontSize: 18,
-            color: Colors.white,
+            color: changes.isNegative ? Colors.red : Colors.green,
           ),
         ),
         SizedBox(width: 25),
-        Text(
-          '4.28%',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.greenAccent,
-          ),
-        ),
-        Icon(
-          Icons.trending_up,
-          color: Colors.greenAccent,
-        ),
+        Trending(changes),
       ],
     );
   }

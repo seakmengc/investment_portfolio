@@ -24,6 +24,16 @@ class Auth extends ChangeNotifier {
     notifyListeners();
   }
 
+  changePassword(String newPassword) async {
+    print("Change password");
+    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    User? currentUser = firebaseAuth.currentUser;
+    if (currentUser != null) {
+      await currentUser.updatePassword(newPassword);
+    }
+  }
+
   void logOut() {
     this._loggedIn = false;
     this.user = null;
