@@ -44,16 +44,16 @@ class _SettingScreenState extends State<SettingScreen>
               ),
             ),
             SPACE_BETWEEN_ELEMENT,
-            CardButton(
-              icon: Icons.lock_outlined,
-              text: 'Change Password',
-              onTap: () {
-                return showDialog(
-                  context: context,
-                  builder: (ctx) => new ChangePasswordDialog(),
-                );
-              },
-            ),
+            // CardButton(
+            //   icon: Icons.lock_outlined,
+            //   text: 'Change Password',
+            //   onTap: () {
+            //     return showDialog(
+            //       context: context,
+            //       builder: (ctx) => new ChangePasswordDialog(),
+            //     );
+            //   },
+            // ),
             CardButton(
               icon: Icons.exit_to_app,
               text: 'Sign Out',

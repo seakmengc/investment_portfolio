@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:investment_portfolio/components/image_renderer.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/token/overview.dart';
 import 'package:investment_portfolio/components/token/trending.dart';
@@ -123,7 +124,13 @@ class TokenViewListTile extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => Scaffold(
               appBar: AppBar(
-                title: Text(token['id']),
+                title: Row(
+                  children: [
+                    ImageRenderer(token['logo_url']),
+                    SizedBox(width: 7),
+                    Text(token['id']),
+                  ],
+                ),
               ),
               body: TokenOverview(token['id']),
             ),

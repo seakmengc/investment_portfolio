@@ -8,6 +8,8 @@ class InfoCard extends StatelessWidget {
   const InfoCard(
       {required this.header, required this.text, this.color = Colors.blue});
 
+  final double radius = 8.0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,11 +19,13 @@ class InfoCard extends StatelessWidget {
       child: Card(
         elevation: 7,
         shadowColor: this.color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
         child: InkWell(
           onTap: () => {},
           child: Container(
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(radius),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -30,7 +34,6 @@ class InfoCard extends StatelessWidget {
                   this.color.withOpacity(0.6),
                   this.color.withOpacity(0.7),
                   this.color.withOpacity(0.8),
-                  this.color.withOpacity(0.9),
                 ],
               ),
             ),
@@ -39,7 +42,13 @@ class InfoCard extends StatelessWidget {
                 SizedBox(
                   width: 7,
                   child: Container(
-                    color: this.color,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(radius),
+                        bottomLeft: Radius.circular(radius),
+                      ),
+                      color: this.color,
+                    ),
                   ),
                 ),
                 Container(

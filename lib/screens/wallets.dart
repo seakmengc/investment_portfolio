@@ -123,6 +123,10 @@ class _WalletScreenState extends State<WalletScreen>
         }
       });
 
+      this._assets.sort(
+            (a, b) => b.currTotalPrice.compareTo(a.currTotalPrice),
+          );
+
       setState(() {});
       print(data);
     });

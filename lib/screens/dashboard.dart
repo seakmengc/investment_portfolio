@@ -52,11 +52,17 @@ class _DashboardScreenState extends State<DashboardScreen>
           SettingScreen(),
         ],
       ),
+      // floatingActionButton: new FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(Icons.add),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );
   }
 
   buildBottomAppBar({required int index, required Function(int) onTap}) {
     return BottomAppBar(
+      shape: const CircularNotchedRectangle(),
       child: BottomNavigationBar(
         currentIndex: index,
         onTap: onTap,

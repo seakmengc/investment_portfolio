@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:investment_portfolio/components/image_renderer.dart';
 import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/screens/assets/detail.dart';
@@ -24,15 +25,7 @@ class AssetListTile extends StatelessWidget {
           ),
         );
       },
-      leading: this.asset.token.hasSvgLogo
-          ? SvgPicture.network(
-              this.asset.token.logoUrl,
-              width: 30,
-            )
-          : Image.network(
-              this.asset.token.logoUrl,
-              width: 30,
-            ),
+      leading: ImageRenderer(this.asset.token.logoUrl),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

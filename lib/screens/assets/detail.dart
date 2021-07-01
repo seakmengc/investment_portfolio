@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:investment_portfolio/components/asset/transac_history.dart';
+import 'package:investment_portfolio/components/image_renderer.dart';
 import 'package:investment_portfolio/components/token/overview.dart';
+import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/asset.dart';
 
 class AssetDetailScreen extends StatelessWidget {
@@ -17,14 +19,38 @@ class AssetDetailScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: NestedScrollView(
-          headerSliverBuilder: buildSliverAppBar,
-          body: TabBarView(
+        appBar: AppBar(
+          title: Row(
             children: [
-              TransacHistory(asset),
-              TokenOverview(asset.token.id),
+              ImageRenderer(asset.token.logoUrl),
+              SizedBox(width: 7),
+              Text(asset.token.id),
             ],
           ),
+          bottom: TabBar(
+            labelColor: Colors.black87,
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Tab(
+                icon: Icon(
+                  Icons.sync,
+                  color: Colors.white,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.dashboard,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            TransacHistory(asset),
+            TokenOverview(asset.token.id),
+          ],
         ),
       ),
     );

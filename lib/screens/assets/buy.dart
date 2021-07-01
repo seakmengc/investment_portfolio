@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:investment_portfolio/components/image_renderer.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/number_form_field.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';

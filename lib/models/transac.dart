@@ -47,13 +47,15 @@ class Transac {
   }
 
   factory Transac.fromJson(Asset asset, Map<String, dynamic> json) {
+    print(json['transacAt']);
     return new Transac(
       asset: asset,
       type: json['type'],
       price: json['price'],
       amount: json['amount'],
-      transacAt:
-          DateTime.tryParse(json['transacAt'].toString()) ?? DateTime.now(),
+      transacAt: json['transacAt'] != null
+          ? (json['transacAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
@@ -66,6 +68,7 @@ class Transac {
         .collection('assets')
         .doc(asset.id)
         .collection("transactions")
+        .orderBy('transacAt', descending: true)
         .get();
 
     return transCollection.docs

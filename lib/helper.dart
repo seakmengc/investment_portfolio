@@ -26,7 +26,7 @@ class Helper {
         tokenId +
         '&start=' +
         start.toUtc().toIso8601String() +
-        (end == null ? '' : end.toUtc().toIso8601String());
+        (end == null ? '' : '&end=' + end.toUtc().toIso8601String());
   }
 
   static String getTokenInfo(String tokenId) {
@@ -47,7 +47,7 @@ class Helper {
 
         return res.data;
       } catch (err) {
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 2));
       }
 
       i++;

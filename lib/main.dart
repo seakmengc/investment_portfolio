@@ -28,8 +28,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Investment Portfolio',
       theme: ThemeData.light().copyWith(
-          // primaryColor: Colors.deepOrange[700],
-          ),
+        // primaryColor: Colors.deepOrange[700],
+        primaryColor: Color(0xff23b6e6),
+        accentColor: const Color(0xff02d39a),
+      ),
       home: FutureBuilder(
         future: Auth.initializeFirebase(context),
         builder: (context, snapshot) {
