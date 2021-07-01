@@ -15,7 +15,7 @@ class MyPortfolios extends StatelessWidget {
       width: double.infinity,
       color: Theme.of(context).primaryColor,
       margin: EdgeInsets.only(top: 270),
-      height: 400,
+      height: MediaQuery.of(context).size.height * 0.8,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

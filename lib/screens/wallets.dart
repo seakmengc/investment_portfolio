@@ -110,9 +110,7 @@ class _WalletScreenState extends State<WalletScreen>
       return;
     }
 
-    return Dio().get(Helper.getTokensInfo(ids)).then((value) {
-      final data = value.data as List;
-
+    return Helper.retryHttp(Helper.getTokensInfo(ids)).then((data) {
       data.forEach((element) {
         try {
           final asset = this

@@ -34,9 +34,8 @@ class _MarketScreenState extends State<MarketScreen>
 
   fetchPage(int pageKey) {
     try {
-      return Dio().get(INDEX_URL + pageKey.toString()).then(
-        (value) {
-          final res = value.data as List<dynamic>;
+      return Helper.retryHttp(INDEX_URL + pageKey.toString()).then(
+        (res) {
           final tokenViews = res.map((e) => TokenViewListTile(e)).toList();
 
           if (res.length < 100) {
@@ -123,6 +122,9 @@ class TokenViewListTile extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => Scaffold(
+              appBar: AppBar(
+                title: Text(token['id']),
+              ),
               body: TokenOverview(token['id']),
             ),
           ),

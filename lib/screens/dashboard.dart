@@ -10,7 +10,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen>
     with TickerProviderStateMixin {
-  int _currIndex = 2;
+  int _currIndex = 0;
   late TabController tabController;
 
   @override

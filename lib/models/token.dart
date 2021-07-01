@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:investment_portfolio/constants.dart';
+import 'package:investment_portfolio/helper.dart';
 
 class Token {
   late String id;
@@ -55,9 +56,9 @@ class Token {
       int page = 1;
 
       while (page <= 1) {
-        final res = await Dio().get(INDEX_URL + page.toString());
+        final data = await Helper.retryHttp(INDEX_URL + page.toString());
 
-        final tokens = List.from(res.data).map((e) => Token.fromNomic(e));
+        final tokens = data.map((e) => Token.fromNomic(e));
         if (tokens.isEmpty) {
           break;
         }
