@@ -73,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
-            label: 'Markets',
+            label: 'Market',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

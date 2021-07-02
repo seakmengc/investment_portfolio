@@ -58,32 +58,27 @@ class _WalletScreenState extends State<WalletScreen>
     Asset curr;
     bool newly = false;
     setState(() {
+      final transac = Transac(
+        asset: addAsset,
+        price: addAsset.price,
+        amount: addAsset.amount,
+        type: "buy",
+      );
+
+      transac.persist();
+
       try {
         curr = this
             ._assets
             .firstWhere((element) => element.token.id == addAsset.token.id);
 
-        final totalAmt = curr.amount + addAsset.amount;
-
-        curr.price = (curr.totalPrice + addAsset.totalPrice) / totalAmt;
-        curr.amount = totalAmt;
+        curr.addTransaction(transac);
       } catch (ex) {
         curr = addAsset;
+        curr.persist();
+
         newly = true;
       }
-
-      final transac = Transac(
-        asset: curr,
-        price: curr.price,
-        amount: curr.amount,
-        type: "buy",
-      );
-
-      curr.addTransaction(transac);
-
-      transac.persist();
-
-      curr.persist();
 
       if (newly) {
         this._assets.add(curr);
@@ -130,6 +125,13 @@ class _WalletScreenState extends State<WalletScreen>
       setState(() {});
       print(data);
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant WalletScreen oldWidget) {
+    getLatestData();
+
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

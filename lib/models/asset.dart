@@ -62,9 +62,10 @@ class Asset extends ChangeNotifier {
         throw new Exception("Exceed max amount.");
       }
 
-      this.amount -= transac.amount;
+      double amount = this.amount - transac.amount;
 
-      this.price = (this.totalPrice - transac.totalPrice) / this.amount;
+      this.price = (this.totalPrice - transac.totalPrice) / amount;
+      this.amount = amount;
     }
 
     this.persist();

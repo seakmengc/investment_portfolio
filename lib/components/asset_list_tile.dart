@@ -32,7 +32,7 @@ class AssetListTile extends StatelessWidget {
         children: [
           Text(this.asset.token.id),
           // Text('\$ 60,970.64'),
-          Text(this.asset.amount.toString()),
+          Text("Amount: " + this.asset.amount.toString()),
         ],
       ),
       trailing: Column(

@@ -35,6 +35,7 @@ class MyBalance extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
       width: double.infinity,
+      // color: Colors.blueGrey.shade900,
       color: Theme.of(context).primaryColor,
       height: 350,
       child: Column(
@@ -102,12 +103,12 @@ class MyBalance extends StatelessWidget {
       bought += element.totalPrice;
     });
 
-    final double changes = (bought - current) / 100.0;
+    final double changes = (current - bought) / 100.0;
     return Row(
       children: [
         AnimatedText(
           text: "\$ " +
-              new NumberFormat("#,##0.00", "en_US").format(bought - current),
+              new NumberFormat("#,##0.00", "en_US").format(current - bought),
           style: TextStyle(
             fontSize: 18,
             color: changes.isNegative ? Colors.red : Colors.green,

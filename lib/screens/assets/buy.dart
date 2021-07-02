@@ -23,7 +23,13 @@ class _BuyScreeenState extends State<BuyScreeen> {
   final amountController = TextEditingController();
   final tokenIdController = TextEditingController();
 
+  final _form = GlobalKey<FormState>();
+
   void addAsset(BuildContext context) async {
+    if (!_form.currentState!.validate()) {
+      return;
+    }
+
     print(perPriceController.text);
     print(amountController.text);
 
@@ -78,29 +84,55 @@ class _BuyScreeenState extends State<BuyScreeen> {
             future: getTokens(),
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  children: [
-                    buildTokenSelection(),
-                    SPACE_BETWEEN_ELEMENT,
-                    NumberFormField(
-                      label: 'Per Price',
-                      controller: perPriceController,
-                    ),
-                    SPACE_BETWEEN_ELEMENT,
-                    NumberFormField(
-                      label: 'Amount',
-                      controller: amountController,
-                    ),
-                    SPACE_BETWEEN_ELEMENT,
-                    SPACE_BETWEEN_ELEMENT,
-                    RoundedButton(
-                      text: 'Add',
-                      textColor: Colors.white,
-                      height: 50,
-                      minWidth: double.infinity,
-                      onPressed: () => addAsset(context),
-                    ),
-                  ],
+                return Form(
+                  key: _form,
+                  child: Column(
+                    children: [
+                      buildTokenSelection(),
+                      SPACE_BETWEEN_ELEMENT,
+                      NumberFormField(
+                        label: 'Per Price',
+                        validator: (String? input) {
+                          if (input == null) {
+                            return 'Please provide a per price value.';
+                          }
+
+                          if (double.tryParse(input) == null) {
+                            return 'Please provide a valid per price value.';
+                          }
+
+                          return null;
+                        },
+                        controller: perPriceController,
+                      ),
+                      SPACE_BETWEEN_ELEMENT,
+                      NumberFormField(
+                        label: 'Amount',
+                        validator: (String? input) {
+                          if (input == null) {
+                            return 'Please provide an amount.';
+                          }
+
+                          double? amount = double.tryParse(input);
+                          if (amount == null) {
+                            return 'Please provide a valid amount.';
+                          }
+
+                          return null;
+                        },
+                        controller: amountController,
+                      ),
+                      SPACE_BETWEEN_ELEMENT,
+                      SPACE_BETWEEN_ELEMENT,
+                      RoundedButton(
+                        text: 'Add',
+                        textColor: Colors.white,
+                        height: 50,
+                        minWidth: double.infinity,
+                        onPressed: () => addAsset(context),
+                      ),
+                    ],
+                  ),
                 );
               }
 

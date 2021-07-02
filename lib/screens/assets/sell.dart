@@ -22,7 +22,15 @@ class _SellScreenState extends State<SellScreen> {
   final amountController = TextEditingController();
   final assetIdController = TextEditingController();
 
+  final _form = GlobalKey<FormState>();
+
+  Asset? _selected;
+
   void sellAsset(BuildContext context) async {
+    if (!_form.currentState!.validate()) {
+      return;
+    }
+
     print(perPriceController.text);
     print(amountController.text);
 
@@ -68,59 +76,100 @@ class _SellScreenState extends State<SellScreen> {
         body: SingleChildScrollView(
           padding:
               const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 10),
-          child: Column(
-            children: [
-              TypeAheadField(
-                hideSuggestionsOnKeyboardHide: false,
-                textFieldConfiguration: TextFieldConfiguration(
-                  autofocus: true,
-                  decoration: InputDecoration(border: OutlineInputBorder()),
-                  controller: assetIdController,
+          child: Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            key: _form,
+            child: Column(
+              children: [
+                buildTokenSelection(),
+                SPACE_BETWEEN_ELEMENT,
+                NumberFormField(
+                  label: 'Per Price',
+                  validator: (String? input) {
+                    if (input == null) {
+                      return 'Please provide a per price value.';
+                    }
+
+                    if (double.tryParse(input) == null) {
+                      return 'Please provide a valid per price value.';
+                    }
+
+                    return null;
+                  },
+                  controller: perPriceController,
                 ),
-                suggestionsCallback: (pattern) {
-                  return searchTokens(pattern);
-                },
-                itemBuilder: (context, suggestion) {
-                  if (suggestion == null) {
-                    return ListTile(
-                      leading: Icon(Icons.shopping_cart),
-                      title: Text('Error'),
-                    );
-                  }
+                SPACE_BETWEEN_ELEMENT,
+                NumberFormField(
+                  label: 'Amount',
+                  validator: (String? input) {
+                    if (input == null) {
+                      return 'Please provide an amount.';
+                    }
 
-                  final asset = suggestion as Asset;
+                    double? amount = double.tryParse(input);
+                    if (amount == null) {
+                      return 'Please provide a valid amount.';
+                    }
 
-                  return TokenListTile(token: asset.token);
-                },
-                onSuggestionSelected: (suggestion) {
-                  final asset = suggestion as Asset;
+                    if (_selected == null) {
+                      return 'Please select a token first.';
+                    }
 
-                  assetIdController.value = TextEditingValue(text: asset.id);
-                },
-              ),
-              SPACE_BETWEEN_ELEMENT,
-              NumberFormField(
-                label: 'Per Price',
-                controller: perPriceController,
-              ),
-              SPACE_BETWEEN_ELEMENT,
-              NumberFormField(
-                label: 'Amount',
-                controller: amountController,
-              ),
-              SPACE_BETWEEN_ELEMENT,
-              SPACE_BETWEEN_ELEMENT,
-              RoundedButton(
-                text: 'Sell',
-                textColor: Colors.white,
-                height: 50,
-                minWidth: double.infinity,
-                onPressed: () => sellAsset(context),
-              ),
-            ],
+                    if (amount > _selected!.amount) {
+                      return 'Amount can\'t exceed ${_selected!.amount}.';
+                    }
+
+                    return null;
+                  },
+                  controller: amountController,
+                ),
+                SPACE_BETWEEN_ELEMENT,
+                SPACE_BETWEEN_ELEMENT,
+                RoundedButton(
+                  text: 'Sell',
+                  textColor: Colors.white,
+                  height: 50,
+                  minWidth: double.infinity,
+                  onPressed: () => sellAsset(context),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  TypeAheadField<Object> buildTokenSelection() {
+    return TypeAheadField(
+      hideSuggestionsOnKeyboardHide: false,
+      textFieldConfiguration: TextFieldConfiguration(
+        autofocus: true,
+        decoration: InputDecoration(border: OutlineInputBorder()),
+        controller: assetIdController,
+      ),
+      suggestionsCallback: (pattern) {
+        return searchTokens(pattern);
+      },
+      itemBuilder: (context, suggestion) {
+        if (suggestion == null) {
+          return ListTile(
+            leading: Icon(Icons.shopping_cart),
+            title: Text('Error'),
+          );
+        }
+
+        final asset = suggestion as Asset;
+
+        return TokenListTile(token: asset.token);
+      },
+      onSuggestionSelected: (suggestion) {
+        final asset = suggestion as Asset;
+
+        assetIdController.value = TextEditingValue(text: asset.id);
+
+        _selected = asset;
+      },
     );
   }
 
