@@ -33,8 +33,12 @@ class _BuyScreeenState extends State<BuyScreeen> {
     print(perPriceController.text);
     print(amountController.text);
 
+    final tokenId = tokenIdController.text.toUpperCase();
     Token selectedToken = this._tokens.firstWhere(
-        (element) => element.id == tokenIdController.text.toUpperCase());
+          (element) => element.id == tokenId,
+          orElse: () => Token(id: tokenId),
+        );
+
     Asset addedAsset = Asset(
       userId: context.read<Auth>().getAuth!.id,
       token: selectedToken,

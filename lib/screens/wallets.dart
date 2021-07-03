@@ -57,33 +57,34 @@ class _WalletScreenState extends State<WalletScreen>
   addAssetCallback(Asset addAsset) async {
     Asset curr;
     bool newly = false;
-    setState(() {
-      final transac = Transac(
-        asset: addAsset,
-        price: addAsset.price,
-        amount: addAsset.amount,
-        type: "buy",
-      );
 
-      transac.persist();
+    final transac = Transac(
+      asset: addAsset,
+      price: addAsset.price,
+      amount: addAsset.amount,
+      type: "buy",
+    );
 
-      try {
-        curr = this
-            ._assets
-            .firstWhere((element) => element.token.id == addAsset.token.id);
+    transac.persist();
 
-        curr.addTransaction(transac);
-      } catch (ex) {
-        curr = addAsset;
-        curr.persist();
+    try {
+      curr = this
+          ._assets
+          .firstWhere((element) => element.token.id == addAsset.token.id);
 
-        newly = true;
-      }
+      curr.addTransaction(transac);
+    } catch (ex) {
+      curr = addAsset;
+      curr.persist();
 
-      if (newly) {
-        this._assets.add(curr);
-      }
-    });
+      newly = true;
+    }
+
+    if (newly) {
+      this._assets.add(curr);
+    }
+
+    setState(() {});
   }
 
   sellAssetCallback(Transac transac) {
