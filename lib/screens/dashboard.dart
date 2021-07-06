@@ -31,8 +31,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     setState(() {
       this._currIndex = index % 3;
       tabController.index = this._currIndex;
-      // print(index);
-      // print(index % 3);
     });
   }
 

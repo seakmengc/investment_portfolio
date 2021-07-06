@@ -19,8 +19,6 @@ class MarketScreen extends StatefulWidget {
 
 class _MarketScreenState extends State<MarketScreen>
     with AutomaticKeepAliveClientMixin {
-  List<Map<String, dynamic>> tokens = [];
-
   final PagingController<int, TokenViewListTile> _pagingController =
       PagingController(firstPageKey: 0);
 
@@ -68,22 +66,30 @@ class _MarketScreenState extends State<MarketScreen>
         centerTitle: true,
         title: Text('Markets'),
       ),
-      body: FutureBuilder(
-        future: fetchPage(1),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return SizedBox(
-              child: PagedListView<int, TokenViewListTile>(
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<TokenViewListTile>(
-                  itemBuilder: (context, item, index) => item,
-                ),
-              ),
-            );
-          }
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder(
+              future: fetchPage(1),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return SizedBox(
+                    child: PagedListView<int, TokenViewListTile>(
+                      pagingController: _pagingController,
+                      addAutomaticKeepAlives: true,
+                      builderDelegate:
+                          PagedChildBuilderDelegate<TokenViewListTile>(
+                        itemBuilder: (context, item, index) => item,
+                      ),
+                    ),
+                  );
+                }
 
-          return Loading();
-        },
+                return Loading();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -99,68 +105,78 @@ class TokenViewListTile extends StatelessWidget {
 
   getLogoWidget() {
     if (token['logo_url'] == '') {
-      return Container();
+      return Container(
+        height: 50,
+        width: 30,
+      );
     }
 
-    return token['logo_url'].toString().endsWith('.svg')
-        ? SvgPicture.network(
-            token['logo_url'],
-            width: 30,
-            fit: BoxFit.cover,
-          )
-        : CachedNetworkImage(
-            imageUrl: token['logo_url'],
-            width: 30,
-            fit: BoxFit.cover,
-          );
+    return Container(
+      width: 30,
+      child: token['logo_url'].toString().endsWith('.svg')
+          ? SvgPicture.network(
+              token['logo_url'],
+              width: 30,
+              fit: BoxFit.cover,
+            )
+          : CachedNetworkImage(
+              imageUrl: token['logo_url'],
+              width: 30,
+              fit: BoxFit.cover,
+            ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-              appBar: AppBar(
-                title: Row(
-                  children: [
-                    ImageRenderer(token['logo_url']),
-                    SizedBox(width: 7),
-                    Text(token['id']),
-                  ],
+    return Container(
+      height: 70,
+      child: ListTile(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ImageRenderer(token['logo_url']),
+                      SizedBox(width: 7),
+                      Text(token['id']),
+                    ],
+                  ),
                 ),
+                body: TokenOverview(token['id']),
               ),
-              body: TokenOverview(token['id']),
             ),
-          ),
-        );
-      },
-      leading: getLogoWidget(),
-      title: Text(token['id']),
-      subtitle: Text(
-        'Vol. ' +
-            Helper.formatNumberToHumanString(
-              double.parse(token['1d']['volume'].toString()),
+          );
+        },
+        leading: getLogoWidget(),
+        title: Text(token['id']),
+        subtitle: Text(
+          'Vol. ' +
+              Helper.formatNumberToHumanString(
+                double.parse(token['1d']['volume'].toString()),
+              ),
+        ),
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              new NumberFormat('\$ #,##0.00')
+                  .format(double.parse(token['price'])),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-      ),
-      trailing: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            new NumberFormat('\$ #,##0.00')
-                .format(double.parse(token['price'])),
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            Trending(
+              double.parse(token['1d']['price_change_pct']) * 100.0,
             ),
-          ),
-          Trending(
-            double.parse(token['1d']['price_change_pct']) * 100.0,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

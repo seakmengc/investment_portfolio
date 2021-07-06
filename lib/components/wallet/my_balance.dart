@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:investment_portfolio/components/animated_text.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/components/token/trending.dart';
+import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/models/transac.dart';
 import 'package:investment_portfolio/screens/assets/buy.dart';
@@ -68,28 +69,33 @@ class MyBalance extends StatelessWidget {
 
   Row buildRowButtons(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        RoundedButton(
-          text: 'Buy',
-          minWidth: 175,
-          height: 50,
-          buttonColor: Colors.white,
-          textColor: Colors.grey[700]!,
-          onPressed: () async {
-            await buyButtonOnPressed(context);
-            calTotalBalance();
-          },
+        Expanded(
+          child: RoundedButton(
+            text: 'Buy',
+            minWidth: 175,
+            height: 50,
+            buttonColor: Colors.white,
+            textColor: Colors.grey[700]!,
+            onPressed: () async {
+              await buyButtonOnPressed(context);
+              calTotalBalance();
+            },
+          ),
         ),
-        RoundedButton(
-          text: 'Sell',
-          minWidth: 175,
-          height: 50,
-          buttonColor: Colors.red[600]!,
-          onPressed: () async {
-            await sellButtonOnPressed(context);
-            calTotalBalance();
-          },
+        WIDTH_BETWEEN_ELEMENT,
+        WIDTH_BETWEEN_ELEMENT,
+        Expanded(
+          child: RoundedButton(
+            text: 'Sell',
+            minWidth: 175,
+            height: 50,
+            buttonColor: Colors.red[600]!,
+            onPressed: () async {
+              await sellButtonOnPressed(context);
+              calTotalBalance();
+            },
+          ),
         ),
       ],
     );

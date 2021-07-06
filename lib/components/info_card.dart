@@ -27,13 +27,12 @@ class InfoCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(radius),
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment(-1.0, -4.0),
+                end: Alignment(1.0, 4.0),
                 colors: [
-                  this.color.withOpacity(0.5),
-                  this.color.withOpacity(0.6),
-                  this.color.withOpacity(0.7),
                   this.color.withOpacity(0.8),
+                  this.color.withOpacity(0.7),
+                  this.color.withOpacity(0.1),
                 ],
               ),
             ),

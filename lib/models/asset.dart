@@ -20,8 +20,6 @@ class Asset extends ChangeNotifier {
     this.id = this.token.id;
 
     this.currPrice = this.price;
-
-    // getTokenUrl();
   }
 
   double get totalPrice {
