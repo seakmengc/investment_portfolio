@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investment_portfolio/components/errors/not_found.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import "dart:math";
 
@@ -53,6 +54,11 @@ class _CustomLineChartState extends State<CustomLineChart> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               print(snapshot.hasData);
+              if (!snapshot.hasData ||
+                  (snapshot.data as List<dynamic>).isEmpty) {
+                return NotFound();
+              }
+
               final data =
                   (snapshot.data as List<dynamic>)[0] as Map<String, dynamic>;
 

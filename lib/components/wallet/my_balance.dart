@@ -109,7 +109,7 @@ class MyBalance extends StatelessWidget {
       bought += element.totalPrice;
     });
 
-    final double changes = (current - bought) / 100.0;
+    final double changes = (current - bought) / bought;
     return Row(
       children: [
         AnimatedText(

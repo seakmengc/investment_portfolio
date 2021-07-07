@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
             children: [
               SizedBox(height: 75),
               Image.asset(
-                'assets/img/logo_1.png',
+                'assets/img/logo.png',
                 width: 200,
                 height: 200,
               ),

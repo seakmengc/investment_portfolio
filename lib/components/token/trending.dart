@@ -3,9 +3,11 @@ import 'package:investment_portfolio/components/animated_text.dart';
 import 'package:investment_portfolio/constants.dart';
 
 class Trending extends StatelessWidget {
-  final double percentages;
+  late final double percentages;
 
-  const Trending(this.percentages);
+  Trending(double percentages) {
+    this.percentages = percentages * 100.0;
+  }
 
   @override
   Widget build(BuildContext context) {

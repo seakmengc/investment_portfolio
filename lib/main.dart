@@ -27,11 +27,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Investment Portfolio',
-      theme: ThemeData.light().copyWith(
-        // primaryColor: Colors.deepOrange[700],
-        // primaryColor: Color(0xff23b6e6),
+      theme: ThemeData(
         primaryColor: Colors.blueGrey.shade900,
         accentColor: const Color(0xff02d39a),
+        fontFamily: 'Nexa',
+        backgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
       ),
       themeMode: ThemeMode.dark,
       home: FutureBuilder(

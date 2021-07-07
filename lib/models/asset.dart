@@ -31,7 +31,7 @@ class Asset extends ChangeNotifier {
   }
 
   double get changes {
-    return (this.currPrice - this.price) / 100.0;
+    return (this.currPrice - this.price) / this.price;
   }
 
   void getTokenUrl() async {
@@ -62,7 +62,8 @@ class Asset extends ChangeNotifier {
 
       double amount = this.amount - transac.amount;
 
-      this.price = (this.totalPrice - transac.totalPrice) / amount;
+      this.price =
+          amount <= 0 ? 0 : (this.totalPrice - transac.totalPrice) / amount;
       this.amount = amount;
     }
 

@@ -20,7 +20,7 @@ class TokenInfo extends StatelessWidget {
         children: [
           InfoCard(
             header: 'Rank #:',
-            text: data['rank'],
+            text: data['rank'] ?? 'N/A',
           ),
           InfoCard(
             header: 'Name:',
@@ -32,7 +32,7 @@ class TokenInfo extends StatelessWidget {
           ),
           InfoCard(
             header: 'Market cap:',
-            text: Helper.formatNumberToHumanString(data['market_cap']),
+            text: Helper.formatNumberToHumanString(data['market_cap'] ?? '0'),
           ),
           InfoCard(
             header: 'Price:',
@@ -41,6 +41,10 @@ class TokenInfo extends StatelessWidget {
           InfoCard(
             header: 'ATH:',
             text: Helper.moneyFormat(data['high']),
+          ),
+          InfoCard(
+            header: 'Status:',
+            text: data['status'],
           ),
         ],
       ),

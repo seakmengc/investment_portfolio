@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
             children: [
               SizedBox(height: 75),
               Image.asset(
-                'assets/img/logo_1.png',
+                'assets/img/logo.png',
                 width: 200,
                 height: 200,
               ),
@@ -37,7 +37,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Email',
-                  hintText: 'khmer@gmail.com',
+                  hintText: 'example@gmail.com',
                 ),
                 controller: emailController,
               ),
@@ -71,12 +71,29 @@ class _SignInScreenState extends State<SignInScreen> {
                 },
               ),
               SPACE_BETWEEN_ELEMENT,
+              buildInfoText(context),
+              SPACE_BETWEEN_ELEMENT,
+              SPACE_BETWEEN_ELEMENT,
               SPACE_BETWEEN_ELEMENT,
               DividerWithText(text: Text('Sign in with')),
               SPACE_BETWEEN_ELEMENT,
               SignInWithGoogleButton(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Container buildInfoText(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: Text(
+        'No account yet? Don\'t worry your input information above will be used to create an account for you.',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 11,
+          color: Colors.blueGrey,
         ),
       ),
     );

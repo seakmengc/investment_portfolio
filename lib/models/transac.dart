@@ -47,7 +47,7 @@ class Transac {
   }
 
   factory Transac.fromJson(Asset asset, Map<String, dynamic> json) {
-    print(json['transacAt']);
+    // print(json['transacAt']);
     return new Transac(
       asset: asset,
       type: json['type'],

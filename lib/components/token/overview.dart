@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_portfolio/components/errors/not_found.dart';
 import 'package:investment_portfolio/components/info_card.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/token/custom_line_chart.dart';
@@ -61,6 +62,11 @@ class _TokenOverviewState extends State<TokenOverview>
               future: getTokenInfo(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
+                  if (!snapshot.hasData ||
+                      (snapshot.data as List<dynamic>).isEmpty) {
+                    return NotFound();
+                  }
+
                   print(snapshot.hasData);
                   print(snapshot.data);
                   return TokenInfo(
