@@ -22,16 +22,16 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 75),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 75),
               Image.asset(
                 'assets/img/logo.png',
-                width: 200,
-                height: 200,
+                width: 150,
+                height: 150,
               ),
+              SizedBox(height: 75),
               TextField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(

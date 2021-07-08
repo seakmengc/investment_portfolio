@@ -31,7 +31,9 @@ class Asset extends ChangeNotifier {
   }
 
   double get changes {
-    return (this.currPrice - this.price) / this.price;
+    return this.price == 0.0
+        ? this.currPrice - this.price
+        : (this.currPrice - this.price) / this.price;
   }
 
   void getTokenUrl() async {
