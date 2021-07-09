@@ -13,6 +13,7 @@ class MyBalance extends StatelessWidget {
   final Function(Asset) addCallback;
   final Function(Transac) sellCallback;
   final List<Asset> assets;
+  final List<Asset> assets;
 
   MyBalance({
     required this.addCallback,
