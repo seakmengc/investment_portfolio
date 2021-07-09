@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:investment_portfolio/components/loading.dart';
@@ -8,12 +7,16 @@ import 'package:investment_portfolio/screens/sign_in.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider<Auth>(create: (_) => Auth()),
-    ], child: MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Auth>(create: (_) => Auth()),
+      ],
+      child: MyApp(),
+    ),
   );
 }
 
@@ -30,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.blueGrey.shade900,
         accentColor: const Color(0xff02d39a),
-        fontFamily: 'Nexa',
+        fontFamily: 'IBMPlex',
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
       ),

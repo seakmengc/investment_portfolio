@@ -5,6 +5,7 @@ import 'package:investment_portfolio/components/wallet/my_balance.dart';
 import 'package:investment_portfolio/components/wallet/my_portfolio.dart';
 import 'package:investment_portfolio/helper.dart';
 import 'package:investment_portfolio/models/asset.dart';
+import 'package:investment_portfolio/providers/asset.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:investment_portfolio/models/transac.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,8 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen>
     with AutomaticKeepAliveClientMixin {
   List<Asset> _assets = [];
+
+  final AssetStore assets = new AssetStore();
 
   @override
   void initState() {
@@ -142,16 +145,19 @@ class _WalletScreenState extends State<WalletScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Container(
-      child: Stack(
-        children: [
-          MyBalance(
-            addCallback: addAssetCallback,
-            sellCallback: sellAssetCallback,
-            assets: _assets,
-          ),
-          MyPortfolios(assets: _assets),
-        ],
+    return Provider<AssetStore>(
+      create: (ctx) => assets,
+      child: Container(
+        child: Stack(
+          children: [
+            MyBalance(
+              addCallback: addAssetCallback,
+              sellCallback: sellAssetCallback,
+              assets: _assets,
+            ),
+            MyPortfolios(assets: _assets),
+          ],
+        ),
       ),
     );
   }

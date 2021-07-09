@@ -79,6 +79,16 @@ flutter:
           weight: 300
         - asset: assets/fonts/nexa/Nexa-Bold.otf
           weight: 700
+    - family: IBMPlex
+      fonts:
+        - asset: assets/fonts/plex/IBMPlexSans-Regular.ttf
+        - asset: assets/fonts/plex/IBMPlexSans-Italic.ttf
+          style: italic
+        - asset: assets/fonts/plex/IBMPlexSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/plex/IBMPlexSans-BoldItalic.ttf
+          weight: 700
+          style: italic
 
   #   - family: Trajan Pro
   #     fonts:
