@@ -5,21 +5,35 @@ import 'package:investment_portfolio/models/transac.dart';
 class AssetStore extends ChangeNotifier {
   final List<Asset> _assets = [];
 
-  get assets => _assets;
+  List<Asset> get assets => _assets;
 
-  set addAsset(Asset asset) {
+  void addAsset(Asset asset) {
     this._assets.add(asset);
 
+    this.sortAssets();
+
     notifyListeners();
   }
 
-  set addAssets(Iterable<Asset> assets) {
+  void addAssets(Iterable<Asset> assets) {
     this._assets.addAll(assets);
 
+    this.sortAssets();
+
     notifyListeners();
   }
 
-  addAssetCallback(Asset addAsset) async {
+  void sortAssets() {
+    this._assets.sort(
+          (a, b) => b.totalPrice.compareTo(a.totalPrice),
+        );
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
+  void addAssetCallback(Asset addAsset) {
     Asset curr;
     bool newly = false;
 
@@ -52,9 +66,14 @@ class AssetStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  sellAssetCallback(Transac transac) {
-    final curr =
-        this._assets.firstWhere((element) => element.id == transac.asset.id);
+  void sellAssetCallback(Transac transac) {
+    final Asset? curr = this
+        ._assets
+        .firstWhere((element) => element.id == transac.asset.id, orElse: null);
+
+    if (curr == null) {
+      return;
+    }
 
     transac.persist();
     curr.addTransaction(transac);

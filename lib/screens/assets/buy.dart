@@ -12,6 +12,10 @@ import 'package:investment_portfolio/models/token.dart';
 import 'package:provider/provider.dart';
 
 class BuyScreeen extends StatefulWidget {
+  String? tokenId;
+
+  BuyScreeen({this.tokenId});
+
   @override
   _BuyScreeenState createState() => _BuyScreeenState();
 }
@@ -24,6 +28,7 @@ class _BuyScreeenState extends State<BuyScreeen> {
   final tokenIdController = TextEditingController();
 
   final _form = GlobalKey<FormState>();
+  final perPriceFocus = FocusNode();
 
   void addAsset(BuildContext context) async {
     if (!_form.currentState!.validate()) {
@@ -77,6 +82,17 @@ class _BuyScreeenState extends State<BuyScreeen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (widget.tokenId != null) {
+      tokenIdController.value = TextEditingValue(text: widget.tokenId!);
+
+      FocusScope.of(context).requestFocus(perPriceFocus);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
@@ -96,6 +112,7 @@ class _BuyScreeenState extends State<BuyScreeen> {
                       SPACE_BETWEEN_ELEMENT,
                       NumberFormField(
                         label: 'Per Price',
+                        focusNode: perPriceFocus,
                         validator: (String? input) {
                           if (input == null) {
                             return 'Please provide a per price value.';

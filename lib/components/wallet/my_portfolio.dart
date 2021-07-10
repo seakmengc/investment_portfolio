@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:investment_portfolio/components/asset_list_tile.dart';
-import 'package:investment_portfolio/models/asset.dart';
+import 'package:investment_portfolio/providers/asset.dart';
+import 'package:provider/provider.dart';
 
-class MyPortfolios extends StatelessWidget {
-  final List<Asset> _assets;
+class MyPortfolios extends StatefulWidget {
+  @override
+  _MyPortfoliosState createState() => _MyPortfoliosState();
+}
 
-  const MyPortfolios({
-    required List<Asset> assets,
-  }) : _assets = assets;
+class _MyPortfoliosState extends State<MyPortfolios> {
+  late AssetStore assetStore;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    assetStore = context.watch<AssetStore>();
     return Container(
       width: double.infinity,
       color: Theme.of(context).primaryColor,
@@ -48,7 +56,11 @@ class MyPortfolios extends StatelessWidget {
         Expanded(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: this._assets.map((e) => AssetListTile(asset: e)).toList(),
+            children: this
+                .assetStore
+                .assets
+                .map((e) => AssetListTile(asset: e, assetStore: assetStore))
+                .toList(),
           ),
         ),
       ],

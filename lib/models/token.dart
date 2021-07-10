@@ -10,8 +10,8 @@ class Token {
   late String logoUrl;
 
   Token({required this.id, String? logoUrl}) {
-    print("constructor");
-    print(logoUrl);
+    // print("constructor");
+    // print(logoUrl);
     this.logoUrl = logoUrl ??
         'https://upload.wikimedia.org/wikipedia/commons/d/d2/Bitcoin_Digital_Currency_Logo.png';
   }
@@ -39,8 +39,8 @@ class Token {
   }
 
   factory Token.fromJson(Map<String, dynamic> json) {
-    print("Token fromjson");
-    print(json);
+    // print("Token fromjson");
+    // print(json);
     return new Token(
       id: json['id'],
       logoUrl: json['logoUrl'],

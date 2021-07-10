@@ -1,7 +1,38 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investment_portfolio/constants.dart';
+
+enum SnackBarType { SUCCESS, ERROR }
 
 class Helper {
+  static showSnackBar({
+    required BuildContext context,
+    required SnackBarType type,
+    String? text,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              type == SnackBarType.SUCCESS
+                  ? Icons.check_circle_outline
+                  : Icons.highlight_off_outlined,
+              color: Colors.white,
+              size: 25,
+            ),
+            WIDTH_F2_BETWEEN_ELEMENT,
+            Text(text ?? 'Something went wrong.'),
+          ],
+        ),
+        backgroundColor:
+            type == SnackBarType.SUCCESS ? Colors.green : Colors.red,
+        duration: Duration(seconds: 3),
+      ),
+    );
+  }
+
   static String formatNumberToHumanString(dynamic number, [int precision = 2]) {
     final nums = [1000000000.0, 1000000.0, 1000.0];
     final words = ['B', 'M', 'K'];

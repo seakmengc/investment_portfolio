@@ -3,13 +3,16 @@ import 'package:flutter_svg/svg.dart';
 import 'package:investment_portfolio/components/image_renderer.dart';
 import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/models/asset.dart';
+import 'package:investment_portfolio/providers/asset.dart';
 import 'package:investment_portfolio/screens/assets/detail.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AssetListTile extends StatelessWidget {
   final Asset asset;
+  final AssetStore assetStore;
 
-  const AssetListTile({required this.asset});
+  const AssetListTile({required this.asset, required this.assetStore});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,7 @@ class AssetListTile extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => AssetDetailScreen(
               asset: this.asset,
+              assetStore: this.assetStore,
             ),
           ),
         );

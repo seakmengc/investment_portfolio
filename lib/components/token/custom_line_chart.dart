@@ -175,9 +175,12 @@ class _CustomLineChartState extends State<CustomLineChart> {
       fontSize: 10,
     );
 
-    print("INT: " + (prices.reduce(max) - prices.reduce(min)).toString());
+    final diff = (prices.reduce(max) * 1.05) - (prices.reduce(min) * 0.95);
+    final leftInterval = diff / (prices.length > 7 ? 7 : prices.length);
 
-    // final diff = prices.reduce(max) - prices.reduce(min);
+    print("INT: " + diff.toString());
+    print("LEN: " + prices.length.toString());
+
     return FlTitlesData(
       show: true,
       bottomTitles: SideTitles(
@@ -195,8 +198,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
       ),
       leftTitles: SideTitles(
         showTitles: true,
-        interval:
-            (prices.reduce(max) - prices.reduce(min)) / (prices.length - 3),
+        interval: diff < 0.01 ? diff / 6.0 : leftInterval,
         getTextStyles: (value) => textStyle,
         rotateAngle: -30,
         getTitles: (value) {

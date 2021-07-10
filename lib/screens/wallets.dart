@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:investment_portfolio/components/wallet/my_balance.dart';
 import 'package:investment_portfolio/components/wallet/my_portfolio.dart';
@@ -7,7 +6,6 @@ import 'package:investment_portfolio/helper.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/providers/asset.dart';
 import 'package:investment_portfolio/models/auth.dart';
-import 'package:investment_portfolio/models/transac.dart';
 import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -19,7 +17,7 @@ class _WalletScreenState extends State<WalletScreen>
     with AutomaticKeepAliveClientMixin {
   List<Asset> _assets = [];
 
-  final AssetStore assets = new AssetStore();
+  final AssetStore assetStore = new AssetStore();
 
   @override
   void initState() {
@@ -40,68 +38,23 @@ class _WalletScreenState extends State<WalletScreen>
 
     // print(assets.docs.first.data());
 
+    final List<Asset> assetsToAdd = [];
+
     assets.docs.forEach((element) {
       print(Asset.fromJson(userId, element.data()).token.logoUrl);
 
-      this._assets.add(Asset.fromJson(userId, element.data()));
+      assetsToAdd.add(Asset.fromJson(userId, element.data()));
     });
 
-    this._assets.sort(
-          (a, b) => b.totalPrice.compareTo(a.totalPrice),
-        );
-
-    setState(() {});
+    assetStore.addAssets(assetsToAdd);
 
     getLatestData();
 
     print('fetched assets from firestore.');
   }
 
-  addAssetCallback(Asset addAsset) async {
-    Asset curr;
-    bool newly = false;
-
-    final transac = Transac(
-      asset: addAsset,
-      price: addAsset.price,
-      amount: addAsset.amount,
-      type: "buy",
-    );
-
-    transac.persist();
-
-    try {
-      curr = this
-          ._assets
-          .firstWhere((element) => element.token.id == addAsset.token.id);
-
-      curr.addTransaction(transac);
-    } catch (ex) {
-      curr = addAsset;
-      curr.persist();
-
-      newly = true;
-    }
-
-    if (newly) {
-      this._assets.add(curr);
-    }
-
-    setState(() {});
-  }
-
-  sellAssetCallback(Transac transac) {
-    final curr =
-        this._assets.firstWhere((element) => element.id == transac.asset.id);
-
-    transac.persist();
-    curr.addTransaction(transac);
-
-    setState(() {});
-  }
-
   getLatestData() {
-    final ids = this._assets.map((e) => e.id).toList();
+    final ids = assetStore.assets.map((e) => e.id).toList();
     print(Helper.getTokensInfo(ids));
 
     print(ids);
@@ -112,8 +65,7 @@ class _WalletScreenState extends State<WalletScreen>
     return Helper.retryHttp(Helper.getTokensInfo(ids)).then((data) {
       data.forEach((element) {
         try {
-          final asset = this
-              ._assets
+          final asset = assetStore.assets
               .firstWhere((asset) => asset.token.id == element['id']);
 
           asset.currPrice = double.parse(element['price']);
@@ -122,11 +74,9 @@ class _WalletScreenState extends State<WalletScreen>
         }
       });
 
-      this._assets.sort(
-            (a, b) => b.currTotalPrice.compareTo(a.currTotalPrice),
-          );
+      assetStore.sortAssets();
+      assetStore.notify();
 
-      setState(() {});
       print(data);
     });
   }
@@ -145,17 +95,13 @@ class _WalletScreenState extends State<WalletScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Provider<AssetStore>(
-      create: (ctx) => assets,
+    return ListenableProvider<AssetStore>(
+      create: (ctx) => assetStore,
       child: Container(
         child: Stack(
           children: [
-            MyBalance(
-              addCallback: addAssetCallback,
-              sellCallback: sellAssetCallback,
-              assets: _assets,
-            ),
-            MyPortfolios(assets: _assets),
+            MyBalance(),
+            MyPortfolios(),
           ],
         ),
       ),

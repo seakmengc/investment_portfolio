@@ -12,11 +12,11 @@ class TransacListTile extends StatelessWidget {
     return ListTile(
       leading: transac.isBought
           ? Icon(
-              Icons.trending_up,
+              Icons.north_east,
               color: Colors.green,
             )
           : Icon(
-              Icons.trending_down,
+              Icons.south_east,
               color: Colors.red,
             ),
       title: Text(

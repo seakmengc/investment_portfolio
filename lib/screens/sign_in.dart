@@ -51,8 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 controller: passwordController,
               ),
-              SPACE_BETWEEN_ELEMENT,
-              SPACE_BETWEEN_ELEMENT,
+              SPACE_F2_BETWEEN_ELEMENT,
               RoundedButton(
                 text: 'Sign In',
                 minWidth: double.infinity,
@@ -72,12 +71,17 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               SPACE_BETWEEN_ELEMENT,
               buildInfoText(context),
-              SPACE_BETWEEN_ELEMENT,
-              SPACE_BETWEEN_ELEMENT,
-              SPACE_BETWEEN_ELEMENT,
+              SPACE_F3_BETWEEN_ELEMENT,
               DividerWithText(text: Text('Sign in with')),
               SPACE_BETWEEN_ELEMENT,
               SignInWithGoogleButton(),
+              SPACE_F3_BETWEEN_ELEMENT,
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/forgot-password');
+                },
+                child: Text('Forgot password?'),
+              )
             ],
           ),
         ),

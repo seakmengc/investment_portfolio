@@ -1,4 +1,4 @@
-name: investment_portfolio
+name: Investment Portfolio
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -40,6 +40,7 @@ dependencies:
   intl: ^0.17.0
   infinite_scroll_pagination: ^3.0.1+1
   fl_chart: ^0.36.2
+  flutter_speed_dial: ^3.0.5
 
 dev_dependencies:
   flutter_test:

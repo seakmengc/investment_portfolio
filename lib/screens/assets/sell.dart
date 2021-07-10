@@ -5,13 +5,13 @@ import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/components/token_list_tile.dart';
 import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/asset.dart';
-import 'package:investment_portfolio/models/token.dart';
 import 'package:investment_portfolio/models/transac.dart';
 
 class SellScreen extends StatefulWidget {
   final List<Asset> assets;
+  final String? assetId;
 
-  const SellScreen({required this.assets});
+  const SellScreen({required this.assets, this.assetId});
 
   @override
   _SellScreenState createState() => _SellScreenState();
@@ -23,6 +23,7 @@ class _SellScreenState extends State<SellScreen> {
   final assetIdController = TextEditingController();
 
   final _form = GlobalKey<FormState>();
+  final perPriceFocus = FocusNode();
 
   Asset? _selected;
 
@@ -61,11 +62,26 @@ class _SellScreenState extends State<SellScreen> {
 
   @override
   void dispose() {
-    super.dispose();
-
     assetIdController.dispose();
     perPriceController.dispose();
     amountController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.assetId != null) {
+      assetIdController.value = TextEditingValue(text: widget.assetId!);
+
+      _selected = widget.assets.firstWhere(
+        (element) => element.id == widget.assetId,
+        orElse: null,
+      );
+
+      FocusScope.of(context).requestFocus(perPriceFocus);
+    }
   }
 
   @override
@@ -85,6 +101,7 @@ class _SellScreenState extends State<SellScreen> {
                 SPACE_BETWEEN_ELEMENT,
                 NumberFormField(
                   label: 'Per Price',
+                  focusNode: perPriceFocus,
                   validator: (String? input) {
                     if (input == null) {
                       return 'Please provide a per price value.';

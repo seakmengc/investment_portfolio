@@ -135,4 +135,10 @@ class Auth extends ChangeNotifier {
 
     context.read<Auth>().loggedIn(auth);
   }
+
+  static sendResetEmail(String email) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    return auth.sendPasswordResetEmail(email: email);
+  }
 }

@@ -18,21 +18,6 @@ class _TransacHistoryState extends State<TransacHistory>
   final List<Transac> transacs = [];
 
   @override
-  void initState() {
-    super.initState();
-
-    fetchTrasactions();
-  }
-
-  fetchTrasactions() async {
-    print("fetchTrasactions");
-    // this.transacs.addAll(await Transac.getByAsset(widget.asset));
-    // setState(() {});
-
-    return Transac.getByAsset(widget.asset);
-  }
-
-  @override
   bool get wantKeepAlive => true;
 
   @override

@@ -6,24 +6,15 @@ import 'package:investment_portfolio/components/token/trending.dart';
 import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/models/asset.dart';
 import 'package:investment_portfolio/models/transac.dart';
+import 'package:investment_portfolio/providers/asset.dart';
 import 'package:investment_portfolio/screens/assets/buy.dart';
 import 'package:investment_portfolio/screens/assets/sell.dart';
+import 'package:provider/provider.dart';
 
 class MyBalance extends StatelessWidget {
-  final Function(Asset) addCallback;
-  final Function(Transac) sellCallback;
-  final List<Asset> assets;
-  final List<Asset> assets;
-
-  MyBalance({
-    required this.addCallback,
-    required this.sellCallback,
-    required this.assets,
-  });
-
-  calTotalBalance() {
+  calTotalBalance(List<Asset> assets) {
     double sum = 0;
-    this.assets.forEach((element) {
+    assets.forEach((element) {
       sum += element.currTotalPrice;
     });
 
@@ -32,7 +23,8 @@ class MyBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double totalBalance = calTotalBalance();
+    final AssetStore assetStore = context.watch<AssetStore>();
+    double totalBalance = calTotalBalance(assetStore.assets);
 
     return Container(
       padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
@@ -60,7 +52,7 @@ class MyBalance extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15),
-          buildDailyPL(),
+          buildDailyPL(assetStore.assets),
           SizedBox(height: 15),
           buildRowButtons(context)
         ],
@@ -69,6 +61,8 @@ class MyBalance extends StatelessWidget {
   }
 
   Row buildRowButtons(BuildContext context) {
+    final AssetStore assetStore = context.read<AssetStore>();
+
     return Row(
       children: [
         Expanded(
@@ -79,8 +73,8 @@ class MyBalance extends StatelessWidget {
             buttonColor: Colors.white,
             textColor: Colors.grey[700]!,
             onPressed: () async {
-              await buyButtonOnPressed(context);
-              calTotalBalance();
+              await buyButtonOnPressed(context, assetStore.addAssetCallback);
+              calTotalBalance(assetStore.assets);
             },
           ),
         ),
@@ -93,8 +87,9 @@ class MyBalance extends StatelessWidget {
             height: 50,
             buttonColor: Colors.red[600]!,
             onPressed: () async {
-              await sellButtonOnPressed(context);
-              calTotalBalance();
+              await sellButtonOnPressed(
+                  context, assetStore.sellAssetCallback, assetStore.assets);
+              calTotalBalance(assetStore.assets);
             },
           ),
         ),
@@ -102,10 +97,10 @@ class MyBalance extends StatelessWidget {
     );
   }
 
-  Row buildDailyPL() {
+  Row buildDailyPL(List<Asset> assets) {
     double current = 0.0;
     double bought = 0.0;
-    this.assets.forEach((element) {
+    assets.forEach((element) {
       current += element.currTotalPrice;
       bought += element.totalPrice;
     });
@@ -127,7 +122,7 @@ class MyBalance extends StatelessWidget {
     );
   }
 
-  buyButtonOnPressed(context) async {
+  buyButtonOnPressed(context, void Function(Asset) callback) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => BuyScreeen(),
@@ -137,11 +132,12 @@ class MyBalance extends StatelessWidget {
     print(result);
 
     if (result != null) {
-      this.addCallback(result);
+      callback(result);
     }
   }
 
-  sellButtonOnPressed(context) async {
+  sellButtonOnPressed(BuildContext context, void Function(Transac) callback,
+      List<Asset> assets) async {
     final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SellScreen(assets: assets),
@@ -151,7 +147,7 @@ class MyBalance extends StatelessWidget {
     print(result);
 
     if (result != null) {
-      this.sellCallback(result);
+      callback(result);
     }
   }
 }

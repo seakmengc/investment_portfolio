@@ -44,7 +44,7 @@ class TokenInfo extends StatelessWidget {
           ),
           InfoCard(
             header: 'Status:',
-            text: data['status'],
+            text: data['status'].toString().toUpperCase(),
           ),
         ],
       ),

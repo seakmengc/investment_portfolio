@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/models/auth.dart';
+import 'package:investment_portfolio/screens/auth/forgot_password.dart';
 import 'package:investment_portfolio/screens/dashboard.dart';
 import 'package:investment_portfolio/screens/sign_in.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,9 @@ class _MyAppState extends State<MyApp> {
           return Loading();
         },
       ),
+      routes: {
+        '/forgot-password': (context) => ForgotPasswordScreen(),
+      },
     );
   }
 }
