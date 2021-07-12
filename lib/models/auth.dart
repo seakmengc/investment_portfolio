@@ -121,6 +121,19 @@ class Auth extends ChangeNotifier {
     return userCredential.user;
   }
 
+  static Future<UserCredential> signUp({
+    required BuildContext context,
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+
+    return userCredential;
+  }
+
   static void afterAuthenticatedFromFirebase(
       BuildContext context, UserCredential userCredential) async {
     final User user = userCredential.user!;

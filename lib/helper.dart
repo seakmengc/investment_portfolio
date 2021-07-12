@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +8,16 @@ import 'package:investment_portfolio/constants.dart';
 enum SnackBarType { SUCCESS, ERROR }
 
 class Helper {
+  static String generateString(int len) {
+    final r = Random();
+
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+
+    return List.generate(len, (index) => _chars[r.nextInt(_chars.length)])
+        .join();
+  }
+
   static showSnackBar({
     required BuildContext context,
     required SnackBarType type,

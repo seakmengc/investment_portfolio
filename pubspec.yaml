@@ -1,4 +1,4 @@
-name: Investment Portfolio
+name: investment_portfolio
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -28,19 +28,23 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   firebase_auth: ^1.4.1
-  provider: ^5.0.0
+  firebase_storage: ^9.0.0
   firebase_core: ^1.3.0
+  firebase_analytics: ^8.1.2
   google_sign_in: ^5.0.4
-  cached_network_image: ^3.0.0
+  cloud_firestore: ^2.2.2
+
+  provider: ^5.0.0
   shared_preferences: ^2.0.6
+  cached_network_image: ^3.0.0
   dio: ^4.0.0
   flutter_svg: ^0.22.0
-  cloud_firestore: ^2.2.2
   flutter_typeahead: ^3.1.3
   intl: ^0.17.0
   infinite_scroll_pagination: ^3.0.1+1
   fl_chart: ^0.36.2
   flutter_speed_dial: ^3.0.5
+  image_picker: ^0.8.1+3
 
 dev_dependencies:
   flutter_test:

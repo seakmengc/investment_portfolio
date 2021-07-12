@@ -5,6 +5,7 @@ import 'package:investment_portfolio/models/auth.dart';
 import 'package:investment_portfolio/screens/auth/forgot_password.dart';
 import 'package:investment_portfolio/screens/dashboard.dart';
 import 'package:investment_portfolio/screens/sign_in.dart';
+import 'package:investment_portfolio/screens/sign_up.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -64,6 +65,7 @@ class AuthScreen extends StatelessWidget {
     print(context.watch<Auth>().isLoggedIn);
     return context.watch<Auth>().isLoggedIn
         ? DashboardScreen()
-        : SignInScreen();
+        : SignUpScreen();
+    // : SignInScreen();
   }
 }

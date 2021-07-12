@@ -25,16 +25,16 @@ class User {
     return new User(
       id: firebaseUser.uid,
       email: firebaseUser.email,
-      name: firebaseUser.displayName,
+      name: firebaseUser.displayName ?? '',
       profileUrl: firebaseUser.photoURL,
     );
   }
 
-  void persist() {
+  void persist() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference userCollection = firestore.collection('users');
 
-    userCollection.doc(this.id).set(this.toJson());
+    await userCollection.doc(this.id).set(this.toJson());
   }
 
   static Future<User?> findById(String id) async {
