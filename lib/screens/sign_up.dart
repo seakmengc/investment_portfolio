@@ -43,16 +43,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   _signUpCallback() async {
-    _isLoading = true;
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       final userCredential = await Auth.signUp(
         context: context,
         email: emailController.text,
         password: passwordController.text,
-        name: nameController.text,
       );
 
-      final auth = User.fromFirebaseAuthUser(userCredential.user!);
+      final auth = User.fromFirebaseAuthUserWithName(
+        userCredential.user!,
+        nameController.text,
+      );
+
       auth.profileUrl = await uploadAvatar();
       print("Done upload avatar: ${auth.profileUrl}");
 
@@ -61,7 +67,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       Auth.afterAuthenticatedFromFirebase(context, userCredential);
     } finally {
-      _isLoading = false;
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

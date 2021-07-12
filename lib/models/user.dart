@@ -30,6 +30,16 @@ class User {
     );
   }
 
+  factory User.fromFirebaseAuthUserWithName(
+      FirebaseAuth.User firebaseUser, String name) {
+    return new User(
+      id: firebaseUser.uid,
+      email: firebaseUser.email,
+      name: name,
+      profileUrl: firebaseUser.photoURL,
+    );
+  }
+
   void persist() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference userCollection = firestore.collection('users');

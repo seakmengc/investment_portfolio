@@ -125,7 +125,6 @@ class Auth extends ChangeNotifier {
     required BuildContext context,
     required String email,
     required String password,
-    required String name,
   }) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     UserCredential userCredential = await auth.createUserWithEmailAndPassword(
