@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/loading_overlay.dart';
 import 'package:investment_portfolio/helper.dart';
 import 'package:investment_portfolio/models/user.dart';
@@ -65,12 +67,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
       auth.persist();
       print(userCredential);
 
+      await userCredential.user!.updateDisplayName(auth.name);
+      await userCredential.user!.updatePhotoURL(auth.profileUrl);
+
       Auth.afterAuthenticatedFromFirebase(context, userCredential);
+
+      Navigator.pop(context);
+    } catch (err) {
+      print(err);
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  _selectAvatarCallback() async {
+    pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+    );
+
+    setState(() {});
   }
 
   @override
@@ -84,20 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/img/logo.png',
-                  width: 150,
-                  height: 150,
-                ),
+                buildAvatar(),
                 TextButton(
-                  child: Text('Hello'),
-                  onPressed: () async {
-                    pickedFile = await ImagePicker().getImage(
-                      source: ImageSource.gallery,
-                    );
-
-                    print(pickedFile);
-                  },
+                  child: Text('Select an avatar'),
+                  onPressed: _selectAvatarCallback,
                 ),
                 SPACE_BETWEEN_ELEMENT,
                 TextField(
@@ -140,6 +147,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Container buildAvatar() {
+    return Container(
+      width: 75,
+      height: 75,
+      child: pickedFile != null
+          ? GestureDetector(
+              onTap: _selectAvatarCallback,
+              child: FutureBuilder(
+                future: pickedFile!.readAsBytes(),
+                builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: MemoryImage(
+                            snapshot.data as Uint8List,
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(75),
+                      ),
+                    );
+                  }
+
+                  return Loading();
+                },
+              ),
+            )
+          : FlutterLogo(),
     );
   }
 }

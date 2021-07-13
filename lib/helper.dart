@@ -89,7 +89,12 @@ class Helper {
         final res = await Dio().get(path);
 
         return res.data;
-      } catch (err) {
+      } on DioError catch (err) {
+        if (err.response?.statusCode != 429) {
+          throw err;
+        }
+
+        print(err.response?.statusCode);
         await Future.delayed(Duration(seconds: 2));
       }
 

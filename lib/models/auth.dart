@@ -54,6 +54,7 @@ class Auth extends ChangeNotifier {
       print(Model.User.fromFirebaseAuthUser(user));
       context.read<Auth>().loggedIn(Model.User.fromFirebaseAuthUser(user));
     }
+
     Token.saveToFirestore();
     print("Done try login");
 

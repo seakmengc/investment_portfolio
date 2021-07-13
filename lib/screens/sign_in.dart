@@ -92,13 +92,26 @@ class _SignInScreenState extends State<SignInScreen> {
   Container buildInfoText(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.7,
-      child: Text(
-        'No account yet? Don\'t worry your input information above will be used to create an account for you.',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 11,
-          color: Colors.blueGrey,
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            // 'No account yet? Don\'t worry your input information above will be used to create an account for you.',
+            'No account yet?',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.blueGrey,
+            ),
+          ),
+          WIDTH_BETWEEN_ELEMENT,
+          TextButton(
+            child: Text('register now!'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/signup');
+            },
+          ),
+        ],
       ),
     );
   }

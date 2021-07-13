@@ -53,6 +53,7 @@ class _MyAppState extends State<MyApp> {
       ),
       routes: {
         '/forgot-password': (context) => ForgotPasswordScreen(),
+        '/signup': (context) => SignUpScreen(),
       },
     );
   }
@@ -65,7 +66,6 @@ class AuthScreen extends StatelessWidget {
     print(context.watch<Auth>().isLoggedIn);
     return context.watch<Auth>().isLoggedIn
         ? DashboardScreen()
-        : SignUpScreen();
-    // : SignInScreen();
+        : SignInScreen();
   }
 }
