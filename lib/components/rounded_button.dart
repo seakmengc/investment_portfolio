@@ -26,6 +26,10 @@ class RoundedButton extends StatelessWidget {
       textColor: this.textColor,
       minWidth: this.minWidth,
       height: this.height,
+      disabledColor: (this.buttonColor ?? Theme.of(context).primaryColor)
+          .withOpacity(0.75),
+      disabledTextColor: this.textColor.withOpacity(0.5),
+      disabledElevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),

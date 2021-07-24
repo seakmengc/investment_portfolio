@@ -100,13 +100,13 @@ class _SignInScreenState extends State<SignInScreen> {
             'No account yet?',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 11,
+              // fontSize: 11,
               color: Colors.blueGrey,
             ),
           ),
           WIDTH_BETWEEN_ELEMENT,
           TextButton(
-            child: Text('register now!'),
+            child: Text('Register now!'),
             onPressed: () {
               Navigator.pushNamed(context, '/signup');
             },

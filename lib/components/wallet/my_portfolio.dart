@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investment_portfolio/components/asset_list_tile.dart';
+import 'package:investment_portfolio/components/errors/not_found.dart';
+import 'package:investment_portfolio/constants.dart';
 import 'package:investment_portfolio/providers/asset.dart';
 import 'package:provider/provider.dart';
 
@@ -54,16 +56,40 @@ class _MyPortfoliosState extends State<MyPortfolios> {
           ),
         ),
         Expanded(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: this
-                .assetStore
-                .assets
-                .map((e) => AssetListTile(asset: e, assetStore: assetStore))
-                .toList(),
-          ),
+          child: this.assetStore.assets.isEmpty
+              ? buildPorfolioNotFound()
+              : buildPortfolio(),
         ),
       ],
+    );
+  }
+
+  ListView buildPortfolio() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: this
+          .assetStore
+          .assets
+          .map((e) => AssetListTile(asset: e, assetStore: assetStore))
+          .toList(),
+    );
+  }
+
+  Center buildPorfolioNotFound() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          NotFound(),
+          SPACE_BETWEEN_ELEMENT,
+          Text(
+            'Please add an asset first.',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

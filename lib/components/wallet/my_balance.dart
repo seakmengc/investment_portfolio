@@ -86,11 +86,13 @@ class MyBalance extends StatelessWidget {
             minWidth: 175,
             height: 50,
             buttonColor: Colors.red[600]!,
-            onPressed: () async {
-              await sellButtonOnPressed(
-                  context, assetStore.sellAssetCallback, assetStore.assets);
-              calTotalBalance(assetStore.assets);
-            },
+            onPressed: assetStore.assets.isEmpty
+                ? null
+                : () async {
+                    await sellButtonOnPressed(context,
+                        assetStore.sellAssetCallback, assetStore.assets);
+                    calTotalBalance(assetStore.assets);
+                  },
           ),
         ),
       ],
