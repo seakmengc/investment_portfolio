@@ -72,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       Auth.afterAuthenticatedFromFirebase(context, userCredential);
 
-      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, '/auth');
     } catch (err) {
       print(err);
     } finally {
@@ -134,14 +134,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   controller: passwordController,
                 ),
-                SPACE_BETWEEN_ELEMENT,
-                SPACE_BETWEEN_ELEMENT,
+                SPACE_F2_BETWEEN_ELEMENT,
                 RoundedButton(
                   text: 'Sign Up',
                   minWidth: double.infinity,
                   height: 50,
                   onPressed: _signUpCallback,
                 ),
+                SPACE_F2_BETWEEN_ELEMENT,
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/auth');
+                  },
+                  child: Text('Already has an account?'),
+                )
               ],
             ),
           ),

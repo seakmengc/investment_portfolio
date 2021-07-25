@@ -16,6 +16,7 @@ class _SettingScreenState extends State<SettingScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
+    final profileUrl = context.read<Auth>().user?.profileUrl;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(top: 30),
@@ -24,16 +25,12 @@ class _SettingScreenState extends State<SettingScreen>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SPACE_BETWEEN_ELEMENT,
-            CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider((context
-                          .read<Auth>()
-                          .user
-                          ?.profileUrl !=
-                      null
-                  ? context.read<Auth>().user?.profileUrl
-                  : "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg")!),
-              radius: 50.0,
-            ),
+            profileUrl != null
+                ? CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider(profileUrl),
+                    radius: 50.0,
+                  )
+                : FlutterLogo(size: 100),
             SPACE_BETWEEN_ELEMENT,
             Text(
               (context.read<Auth>().isLoggedIn

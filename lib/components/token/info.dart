@@ -31,7 +31,7 @@ class TokenInfo extends StatelessWidget {
             text: data['currency'],
           ),
           InfoCard(
-            header: 'Market cap:',
+            header: 'Market Cap:',
             text: Helper.formatNumberToHumanString(data['market_cap'] ?? '0'),
           ),
           InfoCard(

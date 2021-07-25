@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:investment_portfolio/components/custom_future_builder.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/models/auth.dart';
 import 'package:investment_portfolio/screens/auth/forgot_password.dart';
 import 'package:investment_portfolio/screens/dashboard.dart';
 import 'package:investment_portfolio/screens/sign_in.dart';
 import 'package:investment_portfolio/screens/sign_up.dart';
+import 'package:investment_portfolio/screens/welcome.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +31,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Widget buildScreen(BuildContext context, AsyncSnapshot snapshot) {
+    final prefs = snapshot.data as SharedPreferences;
+    final newUserKey = 'new-user';
+    // prefs.clear();
+
+    if (prefs.containsKey(newUserKey)) {
+      return AuthScreen();
+    }
+
+    prefs.setBool(newUserKey, true);
+
+    return WelcomeScreen();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,20 +57,19 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: Colors.white,
       ),
       themeMode: ThemeMode.dark,
-      home: FutureBuilder(
-        future: Auth.initializeFirebase(context),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            print(context.watch<Auth>().isLoggedIn);
-            return AuthScreen();
-          }
-
-          return Loading();
-        },
+      home: CustomFutureBuilder(
+        futureFn: () => Auth.initializeFirebase(context),
+        successWidget: (_, __) => CustomFutureBuilder(
+          futureFn: SharedPreferences.getInstance,
+          successWidget: buildScreen,
+        ),
       ),
       routes: {
         '/forgot-password': (context) => ForgotPasswordScreen(),
         '/signup': (context) => SignUpScreen(),
+        '/signin': (context) => SignInScreen(),
+        '/dashboard': (context) => DashboardScreen(),
+        '/auth': (context) => AuthScreen(),
       },
     );
   }

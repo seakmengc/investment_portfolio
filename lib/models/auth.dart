@@ -37,6 +37,8 @@ class Auth extends ChangeNotifier {
   logOut() async {
     this._loggedIn = false;
     this.user = null;
+    await GoogleSignIn().signOut();
+
     await FirebaseAuth.instance.signOut();
 
     notifyListeners();

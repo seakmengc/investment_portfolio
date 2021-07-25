@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:investment_portfolio/components/custom_future_builder.dart';
 import 'package:investment_portfolio/components/image_renderer.dart';
 import 'package:investment_portfolio/components/loading.dart';
 import 'package:investment_portfolio/components/number_form_field.dart';
@@ -92,6 +93,64 @@ class _BuyScreeenState extends State<BuyScreeen> {
     }
   }
 
+  buildForm() {
+    return Form(
+      key: _form,
+      child: Column(
+        children: [
+          buildTokenSelection(),
+          SPACE_BETWEEN_ELEMENT,
+          NumberFormField(
+            label: 'Per Price',
+            focusNode: perPriceFocus,
+            validator: validatePerPrice,
+            controller: perPriceController,
+          ),
+          SPACE_BETWEEN_ELEMENT,
+          NumberFormField(
+            label: 'Amount',
+            validator: validateAmount,
+            controller: amountController,
+          ),
+          SPACE_BETWEEN_ELEMENT,
+          SPACE_BETWEEN_ELEMENT,
+          RoundedButton(
+            text: 'Add',
+            textColor: Colors.white,
+            height: 50,
+            minWidth: double.infinity,
+            onPressed: () => addAsset(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String? validatePerPrice(String? input) {
+    if (input == null) {
+      return 'Please provide a per price value.';
+    }
+
+    if (double.tryParse(input) == null) {
+      return 'Please provide a valid per price value.';
+    }
+
+    return null;
+  }
+
+  String? validateAmount(String? input) {
+    if (input == null) {
+      return 'Please provide an amount.';
+    }
+
+    double? amount = double.tryParse(input);
+    if (amount == null) {
+      return 'Please provide a valid amount.';
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,65 +159,9 @@ class _BuyScreeenState extends State<BuyScreeen> {
         body: SingleChildScrollView(
           padding:
               const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 10),
-          child: FutureBuilder(
-            future: getTokens(),
-            builder: (ctx, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Form(
-                  key: _form,
-                  child: Column(
-                    children: [
-                      buildTokenSelection(),
-                      SPACE_BETWEEN_ELEMENT,
-                      NumberFormField(
-                        label: 'Per Price',
-                        focusNode: perPriceFocus,
-                        validator: (String? input) {
-                          if (input == null) {
-                            return 'Please provide a per price value.';
-                          }
-
-                          if (double.tryParse(input) == null) {
-                            return 'Please provide a valid per price value.';
-                          }
-
-                          return null;
-                        },
-                        controller: perPriceController,
-                      ),
-                      SPACE_BETWEEN_ELEMENT,
-                      NumberFormField(
-                        label: 'Amount',
-                        validator: (String? input) {
-                          if (input == null) {
-                            return 'Please provide an amount.';
-                          }
-
-                          double? amount = double.tryParse(input);
-                          if (amount == null) {
-                            return 'Please provide a valid amount.';
-                          }
-
-                          return null;
-                        },
-                        controller: amountController,
-                      ),
-                      SPACE_BETWEEN_ELEMENT,
-                      SPACE_BETWEEN_ELEMENT,
-                      RoundedButton(
-                        text: 'Add',
-                        textColor: Colors.white,
-                        height: 50,
-                        minWidth: double.infinity,
-                        onPressed: () => addAsset(context),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              return Loading();
-            },
+          child: CustomFutureBuilder(
+            futureFn: () => getTokens(),
+            successWidget: (_, __) => buildForm(),
           ),
         ),
       ),

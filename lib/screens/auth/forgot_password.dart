@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:investment_portfolio/components/loading_overlay.dart';
 import 'package:investment_portfolio/helper.dart';
 import 'package:investment_portfolio/components/rounded_button.dart';
 import 'package:investment_portfolio/constants.dart';
@@ -12,71 +13,85 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final emailController = new TextEditingController();
+  bool _isLoading = false;
+
+  sendEmailCallback() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final res = await Auth.sendResetEmail(
+        emailController.text,
+      );
+
+      print(res);
+      if (res != null) {
+        throw Exception();
+      }
+
+      Helper.showSnackBar(
+        context: context,
+        type: SnackBarType.SUCCESS,
+        text: "Forgot password email has been sent to you.",
+      );
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (error) {
+      print(error.message);
+      Helper.showSnackBar(
+        context: context,
+        type: SnackBarType.ERROR,
+        text: error.message,
+      );
+    } catch (error) {
+      Helper.showSnackBar(
+        context: context,
+        type: SnackBarType.ERROR,
+        text: 'Something went wrong.',
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 75),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/img/logo.png',
-                width: 150,
-                height: 150,
-              ),
-              SizedBox(height: 75),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
-                  hintText: 'example@gmail.com',
+      body: LoadingOverlay(
+        isLoading: _isLoading,
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 75),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/img/logo.png',
+                  width: 150,
+                  height: 150,
                 ),
-                controller: emailController,
-              ),
-              SPACE_F2_BETWEEN_ELEMENT,
-              RoundedButton(
-                text: 'Send Email',
-                minWidth: double.infinity,
-                height: 50,
-                onPressed: () async {
-                  try {
-                    final res = await Auth.sendResetEmail(
-                      emailController.text,
-                    );
-
-                    print(res);
-                    if (res != null) {
-                      throw Exception();
-                    }
-
-                    Helper.showSnackBar(
-                      context: context,
-                      type: SnackBarType.SUCCESS,
-                      text: "Forgot password email has been sent to you.",
-                    );
-
-                    Navigator.pop(context);
-                  } on FirebaseAuthException catch (error) {
-                    print(error.message);
-                    Helper.showSnackBar(
-                      context: context,
-                      type: SnackBarType.ERROR,
-                      text: error.message,
-                    );
-                  } catch (error) {
-                    Helper.showSnackBar(
-                      context: context,
-                      type: SnackBarType.ERROR,
-                      text: 'Something went wrong.',
-                    );
-                  }
-                },
-              ),
-            ],
+                SPACE_F3_BETWEEN_ELEMENT,
+                TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
+                    hintText: 'example@gmail.com',
+                  ),
+                  controller: emailController,
+                ),
+                SPACE_F2_BETWEEN_ELEMENT,
+                RoundedButton(
+                  text: 'Send Email',
+                  minWidth: double.infinity,
+                  height: 50,
+                  onPressed: sendEmailCallback,
+                ),
+              ],
+            ),
           ),
         ),
       ),
