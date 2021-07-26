@@ -34,15 +34,13 @@ class _MyAppState extends State<MyApp> {
   Widget buildScreen(BuildContext context, AsyncSnapshot snapshot) {
     final prefs = snapshot.data as SharedPreferences;
     final newUserKey = 'new-user';
-    // prefs.clear();
-
-    if (prefs.containsKey(newUserKey)) {
-      return AuthScreen();
+    if (!prefs.containsKey(newUserKey)) {
+      return WelcomeScreen();
     }
 
     prefs.setBool(newUserKey, true);
 
-    return WelcomeScreen();
+    return AuthScreen();
   }
 
   @override

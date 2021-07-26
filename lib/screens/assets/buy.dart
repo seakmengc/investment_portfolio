@@ -112,8 +112,7 @@ class _BuyScreeenState extends State<BuyScreeen> {
             validator: validateAmount,
             controller: amountController,
           ),
-          SPACE_BETWEEN_ELEMENT,
-          SPACE_BETWEEN_ELEMENT,
+          SPACE_F2_BETWEEN_ELEMENT,
           RoundedButton(
             text: 'Add',
             textColor: Colors.white,
